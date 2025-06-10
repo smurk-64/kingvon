@@ -3871,9 +3871,9 @@ case 'setppbot': {
 ├ *Premium Feature* : 💎
 ╰─┬────❍
 ╭─┴─❍「 *SYSTEM* 」❍
-├ *Date* : ${tanggal}
-├ *Day* : ${hari}
-├ *Time* : ${jam} WIB
+├ *Date* : ${date}
+├ *Day* : ${day}
+├ *Time* : ${time} 
 ╰──────❍
 ╭──❍「 *COMMAND LIST* 」❍
 │${setv} ${prefix}profile
