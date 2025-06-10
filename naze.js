@@ -4123,7 +4123,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 						forwardedNewsletterMessageInfo: {
 							newsletterJid: my.ch,
 							serverMessageId: null,
-							newsletterName: 'Join For More Info'
+							newsletterName: 'Ξ KINGV0N ⋮ BINΔRY BΔSE Ξ ⧉ DEV NESTΞ'
 						},
 						externalAdReply: {
 							title: author,
