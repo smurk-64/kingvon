@@ -749,34 +749,34 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 			break
 			case 'setbio': {
 				if (!isCreator) return m.reply(mess.owner)
-				if (!text) return m.reply('Mana text nya?')
-				naze.setStatus(q)
-				m.reply(`*Bio telah di ganti menjadi ${q}*`)
-			}
-			break
-			case 'setppbot': {
-				if (!isCreator) return m.reply(mess.owner)
-				if (!/image/.test(quoted.type)) return m.reply(`Reply Image Dengan Caption ${prefix + command}`)
-				let media = await naze.downloadAndSaveMediaMessage(quoted, 'ppbot.jpeg')
-				if (text.length > 0) {
-					let { img } = await generateProfilePicture(media)
-					await naze.query({
-						tag: 'iq',
-						attrs: {
-							to: '@s.whatsapp.net',
-							type: 'set',
-							xmlns: 'w:profile:picture'
-						},
-						content: [{ tag: 'picture', attrs: { type: 'image' }, content: img }]
-					})
-					await fs.unlinkSync(media)
-					m.reply('Sukses')
-				} else {
-					await naze.updateProfilePicture(botNumber, { url: media })
-					await fs.unlinkSync(media)
-					m.reply('Sukses')
-				}
-			}
+    if (!text) return m.reply('Where is the text?')
+    naze.setStatus(q)
+    m.reply(`*Bio has been changed to ${q}*`)
+}
+break
+case 'setppbot': {
+    if (!isCreator) return m.reply(mess.owner)
+    if (!/image/.test(quoted.type)) return m.reply(`Reply Image With Caption ${prefix + command}`)
+    let media = await naze.downloadAndSaveMediaMessage(quoted, 'ppbot.jpeg')
+    if (text.length > 0) {
+        let { img } = await generateProfilePicture(media)
+        await naze.query({
+            tag: 'iq',
+            attrs: {
+                to: '@s.whatsapp.net',
+                type: 'set',
+                xmlns: 'w:profile:picture'
+            },
+            content: [{ tag: 'picture', attrs: { type: 'image' }, content: img }]
+        })
+        await fs.unlinkSync(media)
+        m.reply('Success')
+    } else {
+        await naze.updateProfilePicture(botNumber, { url: media })
+        await fs.unlinkSync(media)
+        m.reply('Success')
+    }
+}
 			break
 			case 'delppbot': {
 				if (!isCreator) return m.reply(mess.owner)
@@ -3889,31 +3889,31 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}speed
 │${setv} ${prefix}ping
 │${setv} ${prefix}afk
-│${setv} ${prefix}rvo (reply to view once message)
+│${setv} ${prefix}vv (reply to view once message)
 │${setv} ${prefix}inspect (group url)
 │${setv} ${prefix}addmsg
 │${setv} ${prefix}delmsg
 │${setv} ${prefix}getmsg
 │${setv} ${prefix}listmsg
 │${setv} ${prefix}q (reply to message)
-│${setv} ${prefix}menfes (62xxx|fake name)
-│${setv} ${prefix}confes (62xxx|fake name)
-│${setv} ${prefix}roomai
+│${setv} ${prefix}menfes (254720xxx|fake name)
+│${setv} ${prefix}confes (254720xxx|fake name)
+│${setv} ${prefix}roman
 │${setv} ${prefix}jadibot 💎
-│${setv} ${prefix}stopjadibot
-│${setv} ${prefix}listjadibot
+│${setv} ${prefix}stopvonbot
+│${setv} ${prefix}listvonbot
 │${setv} ${prefix}donate
 │${setv} ${prefix}addsewa
-│${setv} ${prefix}delsewa
-│${setv} ${prefix}listsewa
+│${setv} ${prefix}delservice
+│${setv} ${prefix}listservice
 ╰─┬────❍
 ╭─┴❍「 *GROUP COMMANDS* 」❍
-│${setv} ${prefix}add (62xxx)
-│${setv} ${prefix}kick (@tag/62xxx)
-│${setv} ${prefix}promote (@tag/62xxx)
+│${setv} ${prefix}add (254xxx)
+│${setv} ${prefix}kick (@tag/254xxx)
+│${setv} ${prefix}promote (@tag/254xxx)
 │${setv} ${prefix}demote (@tag/62xxx)
-│${setv} ${prefix}warn (@tag/62xxx)
-│${setv} ${prefix}unwarn (@tag/62xxx)
+│${setv} ${prefix}warn (@tag/254xxx)
+│${setv} ${prefix}unwarn (@tag/254xxx)
 │${setv} ${prefix}setname (new group name)
 │${setv} ${prefix}setdesc (description)
 │${setv} ${prefix}setppgc (reply to image)
@@ -4156,7 +4156,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}speed
 │${setv} ${prefix}ping
 │${setv} ${prefix}afk
-│${setv} ${prefix}rvo (reply pesan viewone)
+│${setv} ${prefix}vv (reply pesan viewone)
 │${setv} ${prefix}inspect (url gc)
 │${setv} ${prefix}addmsg
 │${setv} ${prefix}delmsg
@@ -4169,36 +4169,36 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}jadibot 🔸️
 │${setv} ${prefix}stopjadibot
 │${setv} ${prefix}listjadibot
-│${setv} ${prefix}donasi
-│${setv} ${prefix}addsewa
-│${setv} ${prefix}delsewa
-│${setv} ${prefix}listsewa
+│${setv} ${prefix}donate
+│${setv} ${prefix}addservice
+│${setv} ${prefix}delservice
+│${setv} ${prefix}listservice
 ╰──────❍`)
 			}
 			break
 			case 'groupmenu': {
 				m.reply(`
 ╭──❍「 *GROUP* 」❍
-│${setv} ${prefix}add (62xxx)
-│${setv} ${prefix}kick (@tag/62xxx)
-│${setv} ${prefix}promote (@tag/62xxx)
-│${setv} ${prefix}demote (@tag/62xxx)
-│${setv} ${prefix}warn (@tag/62xxx)
-│${setv} ${prefix}unwarn (@tag/62xxx)
-│${setv} ${prefix}setname (nama baru gc)
-│${setv} ${prefix}setdesc (desk)
-│${setv} ${prefix}setppgc (reply imgnya)
-│${setv} ${prefix}delete (reply pesan)
+│${setv} ${prefix}add (254xxx)
+│${setv} ${prefix}kick (@tag/254xxx)
+│${setv} ${prefix}promote (@tag/254xxx)
+│${setv} ${prefix}demote (@tag/254xxx)
+│${setv} ${prefix}warn (@tag/254xxx)
+│${setv} ${prefix}unwarn (@tag/254xxx)
+│${setv} ${prefix}setname 
+│${setv} ${prefix}setdesc 
+│${setv} ${prefix}setppgc 
+│${setv} ${prefix}delete 
 │${setv} ${prefix}linkgrup
 │${setv} ${prefix}revoke
 │${setv} ${prefix}tagall
 │${setv} ${prefix}pin
 │${setv} ${prefix}unpin
 │${setv} ${prefix}hidetag
-│${setv} ${prefix}totag (reply pesan)
+│${setv} ${prefix}totag 
 │${setv} ${prefix}listonline
 │${setv} ${prefix}group set
-│${setv} ${prefix}group (khusus admin)
+│${setv} ${prefix}group 
 ╰──────❍`)
 			}
 			break
@@ -4215,7 +4215,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}gimage (query)
 │${setv} ${prefix}npm (query)
 │${setv} ${prefix}style (query)
-│${setv} ${prefix}cuaca (kota)
+│${setv} ${prefix}weather (city)
 │${setv} ${prefix}tenor (query)
 │${setv} ${prefix}urban (query)
 ╰──────❍`)
@@ -4238,13 +4238,13 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 			case 'quotesmenu': {
 				m.reply(`
 ╭──❍「 *QUOTES* 」❍
-│${setv} ${prefix}motivasi
+│${setv} ${prefix}motivational
 │${setv} ${prefix}quotes
 │${setv} ${prefix}truth
-│${setv} ${prefix}bijak
+│${setv} ${prefix}wise
 │${setv} ${prefix}dare
-│${setv} ${prefix}bucin
-│${setv} ${prefix}renungan
+│${setv} ${prefix}vonquote
+│${setv} ${prefix}mediation
 ╰──────❍`)
 			}
 			break
@@ -4372,7 +4372,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}kapan (text)
 │${setv} ${prefix}siapa (text)
 │${setv} ${prefix}kerangajaib (text)
-│${setv} ${prefix}cekmati (nama lu)
+│${setv} ${prefix}checkmate(nama lu)
 │${setv} ${prefix}ceksifat
 │${setv} ${prefix}cekkhodam (nama lu)
 │${setv} ${prefix}rate (reply pesan)
