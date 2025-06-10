@@ -106,7 +106,7 @@ async function startNazeBot() {
 			return msg?.message || ''
 		}
 		return {
-			conversation: 'Halo Saya Naze Bot'
+			conversation: 'Hello, I am KINGVON MD'
 		}
 	}
 	
@@ -147,7 +147,7 @@ async function startNazeBot() {
 			phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
 			
 			if (!parsePhoneNumber('+' + phoneNumber).valid && phoneNumber.length < 6) {
-				console.log(chalk.bgBlack(chalk.redBright('Start with your Country WhatsApp code') + chalk.whiteBright(',') + chalk.greenBright(' Example : 62xxx')));
+				console.log(chalk.bgBlack(chalk.redBright('Start with your Country WhatsApp code') + chalk.whiteBright(',') + chalk.greenBright(' Example : 254720xxx')));
 				await getPhoneNumber()
 			}
 		}
