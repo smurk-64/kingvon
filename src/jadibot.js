@@ -116,7 +116,7 @@ async function JadiBot(conn, from, m, store) {
 				if (db.set[botNumber].anticall) {
 					for (let id of call) {
 						if (id.status === 'offer') {
-							let msg = await client[from].sendMessage(id.from, { text: `Saat Ini, Kami Tidak Dapat Menerima Panggilan ${id.isVideo ? 'Video' : 'Suara'}.\nJika @${id.from.split('@')[0]} Memerlukan Bantuan, Silakan Hubungi Owner :)`, mentions: [id.from]});
+							let msg = await client[from].sendMessage(id.from, { text: `Currently, we are unable to accept calls ${id.isVideo ? 'Video' : 'Voice'}.\nJika @${id.from.split('@')[0]} Need help, please contact KINGVON :)`, mentions: [id.from]});
 							await client[from].sendContact(id.from, global.owner, msg);
 							await client[from].rejectCall(id.id, id.from)
 						}
@@ -151,17 +151,17 @@ async function JadiBot(conn, from, m, store) {
 
 async function StopJadiBot(conn, from, m) {
 	if (!Object.keys(client).includes(from)) {
-		return conn.sendMessage(m.chat, { text: 'Anda Tidak Sedang jadibot!' }, { quoted: m })
+		return conn.sendMessage(m.chat, { text: '"I am not currently acting as a bot!' }, { quoted: m })
 	}
 	try {
 		client[from].end('Stop')
 		client[from].ev.removeAllListeners()
 	} catch (e) {
-		console.log('Errornya di stopjadibot : ', e)
+		console.log('stopjadibot : ', e)
 	}
 	delete client[from]
 	exec(`rm -rf ./database/jadibot/${from}`)
-	return m.reply('Sukses Keluar Dari Sessi Jadi bot')
+	return m.reply('Successfully exited the session and am no longer acting as a bot')
 }
 
 async function ListJadiBot(conn, m) {
