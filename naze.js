@@ -1206,15 +1206,15 @@ case 'setppbot': {
 				});
 			}
 			break
-			case 'sc': case 'script': {
-				await m.reply(`https://github.com/nazedev/hitori\n⬆️ Itu Sc nya cuy`, {
+			case 'repo': case 'script': {
+				await m.reply(`> CHILUX\n⬆️ REPO WILL BE AVAILABLE SOON`, {
 					contextInfo: {
 						forwardingScore: 10,
 						isForwarded: true,
 						forwardedNewsletterMessageInfo: {
 							newsletterJid: my.ch,
 							serverMessageId: null,
-							newsletterName: 'Join For More Info'
+							newsletterName: 'Ξ KINGV0N ⋮ BINΔRY BΔSE Ξ ⧉ DEV NESTΞ'
 						},
 						externalAdReply: {
 							title: author,
@@ -1269,225 +1269,226 @@ case 'setppbot': {
 			}
 			break
 			case 'kick': case 'dor': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
-					await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'remove').catch((err) => m.reply('Gagal!'))
-				} else m.reply(`Contoh: ${prefix + command} 62xxx`)
-			}
-			break
-			case 'promote': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
-					await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'promote').catch((err) => m.reply('Gagal!'))
-				} else m.reply(`Contoh: ${prefix + command} 62xxx`)
-			}
-			break
-			case 'demote': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
-					await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'demote').catch((err) => m.reply('Gagal!'))
-				} else m.reply(`Contoh: ${prefix + command} 62xxx`)
-			}
-			break
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
+    await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'remove').catch((err) => m.reply('Failed!'))
+  } else m.reply(`Example: ${prefix + command} 62xxx`)
+}
+break
+case 'promote': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
+    await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'promote').catch((err) => m.reply('Failed!'))
+  } else m.reply(`Example: ${prefix + command} 62xxx`)
+}
+break
+case 'demote': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
+    await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'demote').catch((err) => m.reply('Failed!'))
+  } else m.reply(`Example: ${prefix + command} 62xxx`)
+}
+break	
 			case 'warn': case 'warning': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
-					if (!db.groups[m.chat].warn[numbersOnly]) {
-						db.groups[m.chat].warn[numbersOnly] = 1
-						m.reply('Peringatan 1/4, akan dikick sewaktu waktu❗')
-					} else if (db.groups[m.chat].warn[numbersOnly] >= 3) {
-						await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'remove').catch((err) => m.reply('Gagal!'))
-						delete db.groups[m.chat].warn[numbersOnly]
-					} else {
-						db.groups[m.chat].warn[numbersOnly] += 1
-						m.reply(`Peringatan ${db.groups[m.chat].warn[numbersOnly]}/4, akan dikick sewaktu waktu❗`)
-					}
-				} else m.reply(`Contoh: ${prefix + command} 62xxx`)
-			}
-			break
-			case 'unwarn': case 'delwarn': case 'unwarning': case 'delwarning': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
-					if (db.groups[m.chat]?.warn?.[numbersOnly]) {
-						delete db.groups[m.chat].warn[numbersOnly]
-						m.reply('Berhasil Menghapus Warning!')
-					}
-				} else m.reply(`Contoh: ${prefix + command} 62xxx`)
-			}
-			break
-			case 'setname': case 'setnamegc': case 'setsubject': case 'setsubjectgc': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const teksnya = text ? text : m.quoted.text
-					await naze.groupUpdateSubject(m.chat, teksnya).catch((err) => m.reply('Gagal!'))
-				} else m.reply(`Contoh: ${prefix + command} textnya`)
-			}
-			break
-			case 'setdesc': case 'setdescgc': case 'setdesk': case 'setdeskgc': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (text || m.quoted) {
-					const teksnya = text ? text : m.quoted.text
-					await naze.groupUpdateDescription(m.chat, teksnya).catch((err) => m.reply('Gagal!'))
-				} else m.reply(`Contoh: ${prefix + command} textnya`)
-			}
-			break
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
+    if (!db.groups[m.chat].warn[numbersOnly]) {
+      db.groups[m.chat].warn[numbersOnly] = 1
+      m.reply('Warning 1/4, will be kicked at any time ❗')
+    } else if (db.groups[m.chat].warn[numbersOnly] >= 3) {
+      await naze.groupParticipantsUpdate(m.chat, [numbersOnly], 'remove').catch((err) => m.reply('Failed!'))
+      delete db.groups[m.chat].warn[numbersOnly]
+    } else {
+      db.groups[m.chat].warn[numbersOnly] += 1
+      m.reply(`Warning ${db.groups[m.chat].warn[numbersOnly]}/4, will be kicked at any time ❗`)
+    }
+  } else m.reply(`Example: ${prefix + command} 62xxx`)
+}
+break
+case 'unwarn': case 'delwarn': case 'unwarning': case 'delwarning': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const numbersOnly = text ? text.replace(/\D/g, '') + '@s.whatsapp.net' : m.quoted?.sender
+    if (db.groups[m.chat]?.warn?.[numbersOnly]) {
+      delete db.groups[m.chat].warn[numbersOnly]
+      m.reply('Successfully Removed Warning!')
+    }
+  } else m.reply(`Example: ${prefix + command} 62xxx`)
+}
+break
+case 'setname': case 'setnamegc': case 'setsubject': case 'setsubjectgc': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const teksnya = text ? text : m.quoted.text
+    await naze.groupUpdateSubject(m.chat, teksnya).catch((err) => m.reply('Failed!'))
+  } else m.reply(`Example: ${prefix + command} text`)
+}
+break
+case 'setdesc': case 'setdescgc': case 'setdesk': case 'setdeskgc': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (text || m.quoted) {
+    const teksnya = text ? text : m.quoted.text
+    await naze.groupUpdateDescription(m.chat, teksnya).catch((err) => m.reply('Failed!'))
+  } else m.reply(`Example: ${prefix + command} text`)
+}
+break
 			case 'setppgroups': case 'setppgrup': case 'setppgc': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (!m.quoted) return m.reply('Reply Gambar yang mau dipasang di Profile Bot')
-				if (!/image/.test(quoted.type)) return m.reply(`Reply Image Dengan Caption ${prefix + command}`)
-				let media = await naze.downloadAndSaveMediaMessage(quoted, 'ppgc.jpeg')
-				if (text.length > 0) {
-					let { img } = await generateProfilePicture(media)
-					await naze.query({
-						tag: 'iq',
-						attrs: {
-							target: m.chat,
-							to: '@s.whatsapp.net',
-							type: 'set',
-							xmlns: 'w:profile:picture'
-						},
-						content: [{ tag: 'picture', attrs: { type: 'image' }, content: img }]
-					})
-					await fs.unlinkSync(media)
-					m.reply('Sukses')
-				} else {
-					await naze.updateProfilePicture(m.chat, { url: media })
-					await fs.unlinkSync(media)
-					m.reply('Sukses')
-				}
-			}
-			break
-			case 'delete': case 'del': case 'd': {
-				if (!m.quoted) return m.reply('Reply pesan yang mau di delete')
-				await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: m.isBotAdmin ? false : true, id: m.quoted.id, participant: m.quoted.sender }})
-			}
-			break
-			case 'pin': case 'unpin': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				await naze.sendMessage(m.chat, { pin: { type: command == 'pin' ? 1 : 0, time: 2592000, key: m.quoted ? m.quoted.key : m.key }})
-			}
-			break
-			case 'linkgroup': case 'linkgrup': case 'linkgc': case 'urlgroup': case 'urlgrup': case 'urlgc': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				let response = await naze.groupInviteCode(m.chat)
-				await m.reply(`https://chat.whatsapp.com/${response}\n\nLink Group : ${(store.groupMetadata[m.chat] ? store.groupMetadata[m.chat] : (store.groupMetadata[m.chat] = await naze.groupMetadata(m.chat))).subject}`, { detectLink: true })
-			}
-			break
-			case 'revoke': case 'newlink': case 'newurl': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				await naze.groupRevokeInvite(m.chat).then((a) => {
-					m.reply(`Sukses Menyetel Ulang, Tautan Undangan Grup ${m.metadata.subject}`)
-				}).catch((err) => m.reply('Gagal!'))
-			}
-			break
-			case 'group': case 'grup': case 'gc': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				let set = db.groups[m.chat]
-				switch (args[0]?.toLowerCase()) {
-					case 'close': case 'open':
-					await naze.groupSettingUpdate(m.chat, args[0] == 'close' ? 'announcement' : 'not_announcement').then(a => m.reply(`*Sukses ${args[0] == 'open' ? 'Membuka' : 'Menutup'} Group*`))
-					break
-					case 'join':
-					const _list = await naze.groupRequestParticipantsList(m.chat).then(a => a.map(b => b.jid))
-					if (/(a(p|pp|cc)|(ept|rove))|true|ok/i.test(args[1]) && _list.length > 0) {
-						await naze.groupRequestParticipantsUpdate(m.chat, _list, 'approve').catch(e => m.react('❌'))
-					} else if (/reject|false|no/i.test(args[1]) && _list.length > 0) {
-						await naze.groupRequestParticipantsUpdate(m.chat, _list, 'reject').catch(e => m.react('❌'))
-					} else m.reply(`List Request Join :\n${_list.length > 0 ? '- @' + _list.join('\n- @').split('@')[0] : '*Nothing*'}\nExample : ${prefix + command} join acc/reject`)
-					break
-					case 'pesansementara': case 'disappearing':
-					if (/90|7|1|24|on/i.test(args[1])) {
-						naze.sendMessage(m.chat, { disappearingMessagesInChat: /90/i.test(args[1]) ? 7776000 : /7/i.test(args[1]) ? 604800 : 86400 })
-					} else if (/0|off|false/i.test(args[1])) {
-						naze.sendMessage(m.chat, { disappearingMessagesInChat: 0 })
-					} else m.reply('Silahkan Pilih :\n90 hari, 7 hari, 1 hari, off')
-					break
-					case 'antilink': case 'antivirtex': case 'antidelete': case 'welcome': case 'antitoxic': case 'waktusholat': case 'nsfw': case 'antihidetag': case 'setinfo': case 'antitagsw': case 'leave': case 'promote': case 'demote':
-					if (/on|true/i.test(args[1])) {
-						if (set[args[0]]) return m.reply('*Sudah Aktif Sebelumnya*')
-						set[args[0]] = true
-						m.reply('*Sukse Change To On*')
-					} else if (/off|false/i.test(args[1])) {
-						set[args[0]] = false
-						m.reply('*Sukse Change To Off*')
-					} else m.reply(`❗${args[0].charAt(0).toUpperCase() + args[0].slice(1)} on/off`)
-					break
-					case 'setwelcome': case 'setleave': case 'setpromote': case 'setdemote':
-					if (args[1]) {
-						set.text[args[0]] = args.slice(1).join(' ');
-						m.reply(`Sukses Mengubah ${args[0].split('set')[1]} Menjadi:\n${set.text[args[0]]}`)
-					} else m.reply(`Example:\n${prefix + command} ${args[0]} Isi Pesannya\n\nMisal Dengan tag:\n${prefix + command} ${args[0]} Kepada @\nMaka akan Menjadi:\nKepada @0\n\nMisal dengan Tag admin:\n${prefix + command} ${args[0]} Dari @admin untuk @\nMaka akan Menjadi:\nDari @${m.sender.split('@')[0]} untuk @0\n\nMisal dengan Nama grup:\n${prefix + command} ${args[0]} Dari @admin untuk @ di @subject\nMaka akan Menjadi:\nDari @${m.sender.split('@')[0]} untuk @0 di ${m.metadata.subject}`)
-					break
-					default:
-					m.reply(`Settings Group ${m.metadata.subject}\n- open\n- close\n- join acc/reject\n- disappearing 90/7/1/off\n- antilink on/off ${set.antilink ? '🟢' : '🔴'}\n- antivirtex on/off ${set.antivirtex ? '🟢' : '🔴'}\n- antidelete on/off ${set.antidelete ? '🟢' : '🔴'}\n- welcome on/off ${set.welcome ? '🟢' : '🔴'}\n- leave on/off ${set.leave ? '🟢' : '🔴'}\n- promote on/off ${set.promote ? '🟢' : '🔴'}\n- demote on/off ${set.demote ? '🟢' : '🔴'}\n- setinfo on/off ${set.setinfo ? '🟢' : '🔴'}\n- nsfw on/off ${set.nsfw ? '🟢' : '🔴'}\n- waktusholat on/off ${set.waktusholat ? '🟢' : '🔴'}\n- antihidetag on/off ${set.antihidetag ? '🟢' : '🔴'}\n- antitagsw on/off ${set.antitagsw ? '🟢' : '🔴'}\n\n- setwelcome _textnya_\n- setleave _textnya_\n- setpromote _textnya_\n- setdemote _textnya_\n\nExample:\n${prefix + command} antilink off`)
-				}
-			}
-			break
-			case 'tagall': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				let setv = pickRandom(listv)
-				let teks = `*Tag All*\n\n*Pesan :* ${q ? q : ''}\n\n`
-				for (let mem of m.metadata.participants) {
-					teks += `${setv} @${mem.id.split('@')[0]}\n`
-				}
-				await m.reply(teks, { mentions: m.metadata.participants.map(a => a.id) })
-			}
-			break
-			case 'hidetag': case 'h': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				await m.reply(q ? q : '', { mentions: m.metadata.participants.map(a => a.id) })
-			}
-			break
-			case 'totag': {
-				if (!m.isGroup) return m.reply(mess.group)
-				if (!m.isAdmin) return m.reply(mess.admin)
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
-				if (!m.quoted) return m.reply(`Reply pesan dengan caption ${prefix + command}`)
-				delete m.quoted.chat
-				await naze.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: m.metadata.participants.map(a => a.id) })
-			}
-			break
-			case 'listonline': case 'liston': {
-				if (!m.isGroup) return m.reply(mess.group)
-				let id = args && /\d+\-\d+@g.us/.test(args[0]) ? args[0] : m.chat
-				if (!store.presences || !store.presences[id]) return m.reply('Sedang Tidak ada yang online!')
-				let online = [...Object.keys(store.presences[id]), botNumber]
-				await m.reply('List Online:\n\n' + online.map(v => setv + ' @' + v.replace(/@.+/, '')).join`\n`, { mentions: online }).catch((e) => m.reply('Sedang Tidak Ada Yang Online..'))
-			}
-			break
+    if (!m.isGroup) return m.reply(mess.group)
+    if (!m.isAdmin) return m.reply(mess.admin)
+    if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+    if (!m.quoted) return m.reply('Reply with the image you want to set as the Bot Profile')
+    if (!/image/.test(quoted.type)) return m.reply(`Reply Image With Caption ${prefix + command}`)
+    let media = await naze.downloadAndSaveMediaMessage(quoted, 'ppgc.jpeg')
+    if (text.length > 0) {
+        let { img } = await generateProfilePicture(media)
+        await naze.query({
+            tag: 'iq',
+            attrs: {
+                target: m.chat,
+                to: '@s.whatsapp.net',
+                type: 'set',
+                xmlns: 'w:profile:picture'
+            },
+            content: [{ tag: 'picture', attrs: { type: 'image' }, content: img }]
+        })
+        await fs.unlinkSync(media)
+        m.reply('Success')
+    } else {
+        await naze.updateProfilePicture(m.chat, { url: media })
+        await fs.unlinkSync(media)
+        m.reply('Success')
+    }
+}
+break
+case 'delete': case 'del': case 'd': {
+    if (!m.quoted) return m.reply('Reply to the message you want to delete')
+    await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: m.isBotAdmin ? false : true, id: m.quoted.id, participant: m.quoted.sender }})
+}
+break
+case 'pin': case 'unpin': {
+    if (!m.isGroup) return m.reply(mess.group)
+    if (!m.isAdmin) return m.reply(mess.admin)
+    if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+    await naze.sendMessage(m.chat, { pin: { type: command == 'pin' ? 1 : 0, time: 2592000, key: m.quoted ? m.quoted.key : m.key }})
+}
+break
+case 'linkgroup': case 'linkgrup': case 'linkgc': case 'urlgroup': case 'urlgrup': case 'urlgc': {
+    if (!m.isGroup) return m.reply(mess.group)
+    if (!m.isAdmin) return m.reply(mess.admin)
+    if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+    let response = await naze.groupInviteCode(m.chat)
+    await m.reply(`https://chat.whatsapp.com/${response}\n\nLink Group : ${(store.groupMetadata[m.chat] ? store.groupMetadata[m.chat] : (store.groupMetadata[m.chat] = await naze.groupMetadata(m.chat))).subject}`, { detectLink: true })
+}
+break
+case 'revoke': case 'newlink': case 'newurl': {
+    if (!m.isGroup) return m.reply(mess.group)
+    if (!m.isAdmin) return m.reply(mess.admin)
+    if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+    await naze.groupRevokeInvite(m.chat).then((a) => {
+        m.reply(`Successfully Reset, Group Invitation Link ${m.metadata.subject}`)
+    }).catch((err) => m.reply('Failed!'))
+}
+break
+		case 'group': case 'grup': case 'gc': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  let set = db.groups[m.chat]
+  switch (args[0]?.toLowerCase()) {
+    case 'close': case 'open':
+      await naze.groupSettingUpdate(m.chat, args[0] == 'close' ? 'announcement' : 'not_announcement').then(a => m.reply(`*Success ${args[0] == 'open' ? 'Opening' : 'Closing'} Group*`))
+      break
+    case 'join':
+      const _list = await naze.groupRequestParticipantsList(m.chat).then(a => a.map(b => b.jid))
+      if (/(a(p|pp|cc)|(ept|rove))|true|ok/i.test(args[1]) && _list.length > 0) {
+        await naze.groupRequestParticipantsUpdate(m.chat, _list, 'approve').catch(e => m.react('❌'))
+      } else if (/reject|false|no/i.test(args[1]) && _list.length > 0) {
+        await naze.groupRequestParticipantsUpdate(m.chat, _list, 'reject').catch(e => m.react('❌'))
+      } else m.reply(`List Request Join :\n${_list.length > 0 ? '- @' + _list.join('\n- @').split('@')[0] : '*Nothing*'}\nExample : ${prefix + command} join acc/reject`)
+      break
+    case 'pesansementara': case 'disappearing':
+      if (/90|7|1|24|on/i.test(args[1])) {
+        naze.sendMessage(m.chat, { disappearingMessagesInChat: /90/i.test(args[1]) ? 7776000 : /7/i.test(args[1]) ? 604800 : 86400 })
+      } else if (/0|off|false/i.test(args[1])) {
+        naze.sendMessage(m.chat, { disappearingMessagesInChat: 0 })
+      } else m.reply('Please Select :\n90 days, 7 days, 1 day, off')
+      break
+    case 'antilink': case 'antivirtex': case 'antidelete': case 'welcome': case 'antitoxic': case 'waktusholat': case 'nsfw': case 'antihidetag': case 'setinfo': case 'antitagsw': case 'leave': case 'promote': case 'demote':
+      if (/on|true/i.test(args[1])) {
+        if (set[args[0]]) return m.reply('*Already Active Before*')
+        set[args[0]] = true
+        m.reply('*Success Change To On*')
+      } else if (/off|false/i.test(args[1])) {
+        set[args[0]] = false
+        m.reply('*Success Change To Off*')
+      } else m.reply(`❗${args[0].charAt(0).toUpperCase() + args[0].slice(1)} on/off`)
+      break
+    case 'setwelcome': case 'setleave': case 'setpromote': case 'setdemote':
+      if (args[1]) {
+        set.text[args[0]] = args.slice(1).join(' ');
+        m.reply(`Successfully changed ${args[0].split('set')[1]} to:\n${set.text[args[0]]}`)
+      } else m.reply(`Example:\n${prefix + command} ${args[0]} Message Content\n\nExample with tag:\n${prefix + command} ${args[0]} To @\nWill become:\nTo @0\n\nExample with admin tag:\n${prefix + command} ${args[0]} From @admin for @\nWill become:\nFrom @${m.sender.split('@')[0]} for @0\n\nExample with Group Name:\n${prefix + command} ${args[0]} From @admin for @ in @subject\nWill become:\nFrom @${m.sender.split('@')[0]} for @0 in ${m.metadata.subject}`)
+      break
+    default:
+      m.reply(`Group Settings ${m.metadata.subject}\n- open\n- close\n- join acc/reject\n- disappearing 90/7/1/off\n- antilink on/off ${set.antilink ? '🟢' : '🔴'}\n- antivirtex on/off ${set.antivirtex ? '🟢' : '🔴'}\n- antidelete on/off ${set.antidelete ? '🟢' : '🔴'}\n- welcome on/off ${set.welcome ? '🟢' : '🔴'}\n- leave on/off ${set.leave ? '🟢' : '🔴'}\n- promote on/off ${set.promote ? '🟢' : '🔴'}\n- demote on/off ${set.demote ? '🟢' : '🔴'}\n- setinfo on/off ${set.setinfo ? '🟢' : '🔴'}\n- nsfw on/off ${set.nsfw ? '🟢' : '🔴'}\n- waktusholat on/off ${set.waktusholat ? '🟢' : '🔴'}\n- antihidetag on/off ${set.antihidetag ? '🟢' : '🔴'}\n- antitagsw on/off ${set.antitagsw ? '🟢' : '🔴'}\n\n- setwelcome _text_\n- setleave _text_\n- setpromote _text_\n- setdemote _text_\n\nExample:\n${prefix + command} antilink off`)
+  }
+}
+break
+case 'tagall': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  let setv = pickRandom(listv)
+  let teks = `*Tag All*\n\n*Message :* ${q ? q : ''}\n\n`
+  for (let mem of m.metadata.participants) {
+    teks += `${setv} @${mem.id.split('@')[0]}\n`
+  }
+  await m.reply(teks, { mentions: m.metadata.participants.map(a => a.id) })
+}
+break
+case 'hidetag': case 'h': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  await m.reply(q ? q : '', { mentions: m.metadata.participants.map(a => a.id) })
+}
+break
+case 'totag': {
+  if (!m.isGroup) return m.reply(mess.group)
+  if (!m.isAdmin) return m.reply(mess.admin)
+  if (!m.isBotAdmin) return m.reply(mess.botAdmin)
+  if (!m.quoted) return m.reply(`Reply message with caption ${prefix + command}`)
+  delete m.quoted.chat
+  await naze.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: m.metadata.participants.map(a => a.id) })
+}
+break
+case 'listonline': case 'liston': {
+  if (!m.isGroup) return m.reply(mess.group)
+  let id = args && /\d+\-\d+@g.us/.test(args[0]) ? args[0] : m.chat
+  if (!store.presences || !store.presences[id]) return m.reply('No one is online!')
+  let online = [...Object.keys(store.presences[id]), botNumber]
+  await m.reply('List Online:\n\n' + online.map(v => setv + ' @' + v.replace(/@.+/, '')).join`\n`, { mentions: online }).catch((e) => m.reply('No one is online..'))
+}
+break
+				
 			
 			// Bot Menu
 			case 'owner': {
