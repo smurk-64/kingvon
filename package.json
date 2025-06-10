@@ -1,5 +1,5 @@
 {
-  "name": "hitori",
+  "name": "kingvon",
   "version": "1.0.7",
   "description": "Bot WhatsApp Using Lib Baileys Multi Device",
   "main": "start.js",
@@ -15,7 +15,7 @@
     "bot-wa",
     "multi-device"
   ],
-  "author": "Nazedev",
+  "author": "Kingvon",
   "license": "MIT",
   "directories": {
     "lib": "lib",
