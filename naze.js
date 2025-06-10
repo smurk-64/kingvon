@@ -1636,8 +1636,29 @@ case 'setppbot': {
 				let latensi = speed() - timestamp
 				neww = performance.now()
 				oldd = performance.now()
-				respon = `Kecepatan Respon ${latensi.toFixed(4)} _Second_ \n ${oldd - neww} _miliseconds_\n\nRuntime : ${runtime(process.uptime())}\n\n💻 Info Server\nRAM: ${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())}\n\n_NodeJS Memory Usaage_\n${Object.keys(used).map((key, _, arr) => `${key.padEnd(Math.max(...arr.map(v=>v.length)),' ')}: ${formatp(used[key])}`).join('\n')}\n\n${cpus[0] ? `_Total CPU Usage_\n${cpus[0].model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times).map(type => `- *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}%`).join('\n')}\n_CPU Core(s) Usage (${cpus.length} Core CPU)_\n${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times).map(type => `- *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}%`).join('\n')}`).join('\n\n')}` : ''}`.trim()
-				m.reply(respon)
+				const frameTop = "╔════════════════════════════════════════════════╗";
+const frameBottom = "╚════════════════════════════════════════════════╝";
+const frameSide = "║";
+
+let respon = `${frameTop}\n${frameSide} Response Time: ${latensi.toFixed(4)} seconds ${frameSide}\n${frameSide} Latency Delta: ${oldd - neww} ms ${frameSide}\n${frameSide} Uptime: ${runtime(process.uptime())} ${frameSide}\n${frameSide} Server Specs: ${frameSide}\n${frameSide} RAM Usage: ${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())} ${frameSide}\n${frameSide} Node.js Memory Footprint: ${frameSide}\n${Object.keys(used).map((key, _, arr) => `${frameSide} ${key.padEnd(Math.max(...arr.map(v=>v.length)),' ')}: ${formatp(used[key])} ${frameSide}`).join('\n')}\n`;
+
+if (cpus && cpus.length > 0) {
+    const cpu = {
+        total: Object.values(cpus[0].times).reduce((acc, tv) => acc + tv, 0),
+        speed: cpus[0].speed,
+        model: cpus[0].model,
+        times: cpus[0].times
+    };
+
+    respon += `${frameSide} CPU Load (Aggregate): ${frameSide}\n${frameSide} Model: ${cpu.model.trim()} (${cpu.speed} MHz) ${frameSide}\n${Object.keys(cpu.times).map(type => `${frameSide} - *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}% ${frameSide}`).join('\n')}\n${frameSide} CPU Core Utilization (${cpus.length} Cores): ${frameSide}\n${cpus.map((cpu, i) => `${frameSide} Core ${i + 1}: ${cpu.model.trim()} (${cpu.speed} MHz) ${frameSide}\n${Object.keys(cpu.times).map(type => `${frameSide} - *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}% ${frameSide}`).join('\n')}`).join(`\n${frameSide} ${frameSide}\n`)}`;
+} else {
+    respon += `${frameSide} CPU Information Unavailable. ${frameSide}`;
+}
+
+respon += `\n${frameBottom}`;
+//respon = respon.trim(); //trimming causes issues with the frame
+m.reply(respon);
+																																																											    
 			}
 			break
 			case 'speedtest': case 'speed': {
