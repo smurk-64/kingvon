@@ -3856,80 +3856,80 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				}
 				const menunya = `
 ╭──❍「 *USER INFO* 」❍
-├ *Nama* : ${m.pushName ? m.pushName : 'Tanpa Nama'}
-├ *Id* : @${m.sender.split('@')[0]}
-├ *User* : ${isVip ? 'VIP' : isPremium ? 'PREMIUM' : 'FREE'}
+├ *Name* : ${m.pushName ? m.pushName : 'No Name'}
+├ *ID* : @${m.sender.split('@')[0]}
+├ *Status* : ${isVip ? 'VIP' : isPremium ? 'PREMIUM' : 'FREE'}
 ├ *Limit* : ${isVip ? 'VIP' : db.users[m.sender].limit }
-├ *Money* : ${db.users[m.sender] ? db.users[m.sender].money.toLocaleString('id-ID') : '0'}
+├ *Money* : ${db.users[m.sender] ? db.users[m.sender].money.toLocaleString('en-US') : '0'}
 ╰─┬────❍
 ╭─┴─❍「 *BOT INFO* 」❍
-├ *Nama Bot* : ${botname}
-├ *Powered* : @${'0@s.whatsapp.net'.split('@')[0]}
+├ *Bot Name* : ${botname}
+├ *Powered By* : @${'0@s.whatsapp.net'.split('@')[0]}
 ├ *Owner* : @${owner[0].split('@')[0]}
 ├ *Mode* : ${naze.public ? 'Public' : 'Self'}
 ├ *Prefix* :${set.multiprefix ? '「 MULTI-PREFIX 」' : ' *'+prefix+'*' }
-├ *Premium Feature* : 🔸️
+├ *Premium Feature* : 💎
 ╰─┬────❍
-╭─┴─❍「 *ABOUT* 」❍
-├ *Tanggal* : ${tanggal}
-├ *Hari* : ${hari}
-├ *Jam* : ${jam} WIB
+╭─┴─❍「 *SYSTEM* 」❍
+├ *Date* : ${tanggal}
+├ *Day* : ${hari}
+├ *Time* : ${jam} WIB
 ╰──────❍
-╭──❍「 *BOT* 」❍
+╭──❍「 *COMMAND LIST* 」❍
 │${setv} ${prefix}profile
 │${setv} ${prefix}claim
-│${setv} ${prefix}buy [item] (nominal)
+│${setv} ${prefix}buy [item] (amount)
 │${setv} ${prefix}transfer
 │${setv} ${prefix}leaderboard
 │${setv} ${prefix}request (text)
 │${setv} ${prefix}react (emoji)
 │${setv} ${prefix}tagme
 │${setv} ${prefix}runtime
-│${setv} ${prefix}totalfitur
+│${setv} ${prefix}totalfeatures
 │${setv} ${prefix}speed
 │${setv} ${prefix}ping
 │${setv} ${prefix}afk
-│${setv} ${prefix}rvo (reply pesan viewone)
-│${setv} ${prefix}inspect (url gc)
+│${setv} ${prefix}rvo (reply to view once message)
+│${setv} ${prefix}inspect (group url)
 │${setv} ${prefix}addmsg
 │${setv} ${prefix}delmsg
 │${setv} ${prefix}getmsg
 │${setv} ${prefix}listmsg
-│${setv} ${prefix}q (reply pesan)
+│${setv} ${prefix}q (reply to message)
 │${setv} ${prefix}menfes (62xxx|fake name)
 │${setv} ${prefix}confes (62xxx|fake name)
 │${setv} ${prefix}roomai
-│${setv} ${prefix}jadibot 🔸️
+│${setv} ${prefix}jadibot 💎
 │${setv} ${prefix}stopjadibot
 │${setv} ${prefix}listjadibot
-│${setv} ${prefix}donasi
+│${setv} ${prefix}donate
 │${setv} ${prefix}addsewa
 │${setv} ${prefix}delsewa
 │${setv} ${prefix}listsewa
 ╰─┬────❍
-╭─┴❍「 *GROUP* 」❍
+╭─┴❍「 *GROUP COMMANDS* 」❍
 │${setv} ${prefix}add (62xxx)
 │${setv} ${prefix}kick (@tag/62xxx)
 │${setv} ${prefix}promote (@tag/62xxx)
 │${setv} ${prefix}demote (@tag/62xxx)
 │${setv} ${prefix}warn (@tag/62xxx)
 │${setv} ${prefix}unwarn (@tag/62xxx)
-│${setv} ${prefix}setname (nama baru gc)
-│${setv} ${prefix}setdesc (desk)
-│${setv} ${prefix}setppgc (reply imgnya)
-│${setv} ${prefix}delete (reply pesan)
-│${setv} ${prefix}linkgrup
+│${setv} ${prefix}setname (new group name)
+│${setv} ${prefix}setdesc (description)
+│${setv} ${prefix}setppgc (reply to image)
+│${setv} ${prefix}delete (reply to message)
+│${setv} ${prefix}linkgroup
 │${setv} ${prefix}revoke
 │${setv} ${prefix}tagall
 │${setv} ${prefix}pin
 │${setv} ${prefix}unpin
 │${setv} ${prefix}hidetag
-│${setv} ${prefix}totag (reply pesan)
+│${setv} ${prefix}totag (reply to message)
 │${setv} ${prefix}listonline
 │${setv} ${prefix}group set
-│${setv} ${prefix}group (khusus admin)
+│${setv} ${prefix}group (admin only)
 ╰─┬────❍
-╭─┴❍「 *SEARCH* 」❍
+╭─┴❍「 *SEARCH TOOLS* 」❍
 │${setv} ${prefix}ytsearch (query)
 │${setv} ${prefix}spotify (query)
 │${setv} ${prefix}pixiv (query)
@@ -3940,11 +3940,11 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}gimage (query)
 │${setv} ${prefix}npm (query)
 │${setv} ${prefix}style (query)
-│${setv} ${prefix}cuaca (kota)
+│${setv} ${prefix}weather (city)
 │${setv} ${prefix}tenor (query)
 │${setv} ${prefix}urban (query)
 ╰─┬────❍
-╭─┴❍「 *DOWNLOAD* 」❍
+╭─┴❍「 *DOWNLOADER* 」❍
 │${setv} ${prefix}ytmp3 (url)
 │${setv} ${prefix}ytmp4 (url)
 │${setv} ${prefix}instagram (url)
@@ -3954,69 +3954,69 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}spotifydl (url)
 │${setv} ${prefix}mediafire (url)
 ╰─┬────❍
-╭─┴❍「 *QUOTES* 」❍
-│${setv} ${prefix}motivasi
+╭─┴❍「 *QUOTES & WISDOM* 」❍
+│${setv} ${prefix}motivate
 │${setv} ${prefix}quotes
 │${setv} ${prefix}truth
-│${setv} ${prefix}bijak
+│${setv} ${prefix}wisdom
 │${setv} ${prefix}dare
-│${setv} ${prefix}bucin
-│${setv} ${prefix}renungan
+│${setv} ${prefix}lovequotes
+│${setv} ${prefix}reflection
 ╰─┬────❍
-╭─┴❍「 *TOOLS* 」❍
-│${setv} ${prefix}get (url) 🔸️
-│${setv} ${prefix}hd (reply pesan)
-│${setv} ${prefix}toaudio (reply pesan)
-│${setv} ${prefix}tomp3 (reply pesan)
-│${setv} ${prefix}tovn (reply pesan)
-│${setv} ${prefix}toimage (reply pesan)
-│${setv} ${prefix}toptv (reply pesan)
-│${setv} ${prefix}tourl (reply pesan)
-│${setv} ${prefix}tts (textnya)
-│${setv} ${prefix}toqr (textnya)
-│${setv} ${prefix}brat (textnya)
-│${setv} ${prefix}bratvid (textnya)
-│${setv} ${prefix}ssweb (url) 🔸️
-│${setv} ${prefix}sticker (send/reply img)
-│${setv} ${prefix}colong (reply stiker)
-│${setv} ${prefix}smeme (send/reply img)
-│${setv} ${prefix}dehaze (send/reply img)
-│${setv} ${prefix}colorize (send/reply img)
-│${setv} ${prefix}hitamkan (send/reply img)
+╭─┴❍「 *UTILITIES* 」❍
+│${setv} ${prefix}get (url) 💎
+│${setv} ${prefix}hd (reply to image)
+│${setv} ${prefix}toaudio (reply to video)
+│${setv} ${prefix}tomp3 (reply to video)
+│${setv} ${prefix}tovn (reply to audio)
+│${setv} ${prefix}toimage (reply to sticker/video)
+│${setv} ${prefix}toptv (reply to sticker)
+│${setv} ${prefix}tourl (reply to media)
+│${setv} ${prefix}tts (text)
+│${setv} ${prefix}toqr (text)
+│${setv} ${prefix}brat (text)
+│${setv} ${prefix}bratvid (text)
+│${setv} ${prefix}ssweb (url) 💎
+│${setv} ${prefix}sticker (send/reply to image)
+│${setv} ${prefix}steal (reply to sticker)
+│${setv} ${prefix}smeme (send/reply to image)
+│${setv} ${prefix}dehaze (send/reply to image)
+│${setv} ${prefix}colorize (send/reply to image)
+│${setv} ${prefix}blackandwhite (send/reply to image)
 │${setv} ${prefix}emojimix 🙃+💀
-│${setv} ${prefix}nulis
+│${setv} ${prefix}write (text)
 │${setv} ${prefix}readmore text1|text2
-│${setv} ${prefix}qc (pesannya)
+│${setv} ${prefix}qc (message)
 │${setv} ${prefix}translate
-│${setv} ${prefix}wasted (send/reply img)
-│${setv} ${prefix}triggered (send/reply img)
-│${setv} ${prefix}shorturl (urlnya)
-│${setv} ${prefix}gitclone (urlnya)
-│${setv} ${prefix}fat (reply audio)
-│${setv} ${prefix}fast (reply audio)
-│${setv} ${prefix}bass (reply audio)
-│${setv} ${prefix}slow (reply audio)
-│${setv} ${prefix}tupai (reply audio)
-│${setv} ${prefix}deep (reply audio)
-│${setv} ${prefix}robot (reply audio)
-│${setv} ${prefix}blown (reply audio)
-│${setv} ${prefix}reverse (reply audio)
-│${setv} ${prefix}smooth (reply audio)
-│${setv} ${prefix}earrape (reply audio)
-│${setv} ${prefix}nightcore (reply audio)
-│${setv} ${prefix}getexif (reply sticker)
+│${setv} ${prefix}wasted (send/reply to image)
+│${setv} ${prefix}triggered (send/reply to image)
+│${setv} ${prefix}shorturl (url)
+│${setv} ${prefix}gitclone (url)
+│${setv} ${prefix}fat (reply to audio)
+│${setv} ${prefix}fast (reply to audio)
+│${setv} ${prefix}bass (reply to audio)
+│${setv} ${prefix}slow (reply to audio)
+│${setv} ${prefix}chipmunk (reply to audio)
+│${setv} ${prefix}deep (reply to audio)
+│${setv} ${prefix}robot (reply to audio)
+│${setv} ${prefix}blown (reply to audio)
+│${setv} ${prefix}reverse (reply to audio)
+│${setv} ${prefix}smooth (reply to audio)
+│${setv} ${prefix}earrape (reply to audio)
+│${setv} ${prefix}nightcore (reply to audio)
+│${setv} ${prefix}getexif (reply to sticker)
 ╰─┬────❍
-╭─┴❍「 *AI* 」❍
+╭─┴❍「 *AI POWERED* 」❍
 │${setv} ${prefix}ai (query)
 │${setv} ${prefix}simi (query)
 │${setv} ${prefix}gemini (query)
 │${setv} ${prefix}txt2img (query)
 ╰─┬────❍
-╭─┴❍「 *ANIME* 」❍
+╭─┴❍「 *ANIME ZONE* 」❍
 │${setv} ${prefix}waifu
 │${setv} ${prefix}neko
 ╰─┬────❍
-╭─┴❍「 *GAME* 」❍
+╭─┴❍「 *GAMES & FUN* 」❍
 │${setv} ${prefix}tictactoe
 │${setv} ${prefix}akinator
 │${setv} ${prefix}suit
@@ -4025,48 +4025,48 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}begal
 │${setv} ${prefix}ulartangga
 │${setv} ${prefix}blackjack
-│${setv} ${prefix}catur
-│${setv} ${prefix}casino (nominal)
-│${setv} ${prefix}samgong (nominal)
-│${setv} ${prefix}rampok (@tag)
-│${setv} ${prefix}tekateki
-│${setv} ${prefix}tebaklirik
-│${setv} ${prefix}tebakkata
-│${setv} ${prefix}tebakbom
-│${setv} ${prefix}susunkata
+│${setv} ${prefix}chess
+│${setv} ${prefix}casino (amount)
+│${setv} ${prefix}samgong (amount)
+│${setv} ${prefix}rob (@tag)
+│${setv} ${prefix}riddle
+│${setv} ${prefix}guesslyrics
+│${setv} ${prefix}guessword
+│${setv} ${prefix}guessbomb
+│${setv} ${prefix}jumbleword
 │${setv} ${prefix}colorblind
-│${setv} ${prefix}tebakkimia
+│${setv} ${prefix}guesschemistry
 │${setv} ${prefix}caklontong
-│${setv} ${prefix}tebakangka
-│${setv} ${prefix}tebaknegara
-│${setv} ${prefix}tebakgambar
-│${setv} ${prefix}tebakbendera
+│${setv} ${prefix}guessnumber
+│${setv} ${prefix}guesscountry
+│${setv} ${prefix}guessimage
+│${setv} ${prefix}guessflag
 ╰─┬────❍
-╭─┴❍「 *FUN* 」❍
-│${setv} ${prefix}coba
-│${setv} ${prefix}dadu
-│${setv} ${prefix}bisakah (text)
-│${setv} ${prefix}apakah (text)
-│${setv} ${prefix}kapan (text)
-│${setv} ${prefix}siapa (text)
-│${setv} ${prefix}kerangajaib (text)
-│${setv} ${prefix}cekmati (nama lu)
-│${setv} ${prefix}ceksifat
-│${setv} ${prefix}cekkhodam (nama lu)
-│${setv} ${prefix}rate (reply pesan)
-│${setv} ${prefix}jodohku
-│${setv} ${prefix}jadian
-│${setv} ${prefix}fitnah
+╭─┴❍「 *JUST FOR FUN* 」❍
+│${setv} ${prefix}try
+│${setv} ${prefix}dice
+│${setv} ${prefix}can (text)
+│${setv} ${prefix}is (text)
+│${setv} ${prefix}when (text)
+│${setv} ${prefix}who (text)
+│${setv} ${prefix}magicball (text)
+│${setv} ${prefix}deathcheck (your name)
+│${setv} ${prefix}personalitycheck
+│${setv} ${prefix}khodamcheck (your name)
+│${setv} ${prefix}rate (reply to message)
+│${setv} ${prefix}match
+│${setv} ${prefix}dating
+│${setv} ${prefix}lie
 │${setv} ${prefix}halah (text)
 │${setv} ${prefix}hilih (text)
 │${setv} ${prefix}huluh (text)
 │${setv} ${prefix}heleh (text)
 │${setv} ${prefix}holoh (text)
 ╰─┬────❍
-╭─┴❍「 *RANDOM* 」❍
-│${setv} ${prefix}coffe
+╭─┴❍「 *RANDOM STUFF* 」❍
+│${setv} ${prefix}coffee
 ╰─┬────❍
-╭─┴❍「 *STALKER* 」❍
+╭─┴❍「 *SOCIAL STALKER* 」❍
 │${setv} ${prefix}wastalk
 │${setv} ${prefix}telestalk
 │${setv} ${prefix}igstalk
@@ -4074,7 +4074,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}githubstalk
 │${setv} ${prefix}genshinstalk
 ╰─┬────❍
-╭─┴❍「 *OWNER* 」❍
+╭─┴❍「 *OWNER ZONE* 」❍
 │${setv} ${prefix}bot [set]
 │${setv} ${prefix}setbio
 │${setv} ${prefix}setppbot
@@ -4095,7 +4095,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}delprem
 │${setv} ${prefix}listprem
 │${setv} ${prefix}addlimit
-│${setv} ${prefix}adduang
+│${setv} ${prefix}addmoney
 │${setv} ${prefix}getmsgstore
 │${setv} ${prefix}bot --settings
 │${setv} ${prefix}bot settings
@@ -4104,10 +4104,11 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 │${setv} ${prefix}delsampah
 │${setv} ${prefix}upsw
 │${setv} ${prefix}backup
-│${setv} $
+│${setv} ${prefix} $
 │${setv} >
 │${setv} <
 ╰──────❍`
+
 				await m.reply({
 					document: fake.docs,
 					fileName: ucapanWaktu,
