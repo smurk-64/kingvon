@@ -1636,8 +1636,8 @@ case 'setppbot': {
 				let latensi = speed() - timestamp
 				neww = performance.now()
 				oldd = performance.now()
-				const frameTop = "╔════════════════════════════════════════════════╗";
-const frameBottom = "╚════════════════════════════════════════════════╝";
+				const frameTop = "╔════════════════════════════════════╗";
+const frameBottom = "╚═════════════════════════════════════╝";
 const frameSide = "║";
 
 let respon = `${frameTop}\n${frameSide} Response Time: ${latensi.toFixed(4)} seconds ${frameSide}\n${frameSide} Latency Delta: ${oldd - neww} ms ${frameSide}\n${frameSide} Uptime: ${runtime(process.uptime())} ${frameSide}\n${frameSide} Server Specs: ${frameSide}\n${frameSide} RAM Usage: ${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())} ${frameSide}\n${frameSide} Node.js Memory Footprint: ${frameSide}\n${Object.keys(used).map((key, _, arr) => `${frameSide} ${key.padEnd(Math.max(...arr.map(v=>v.length)),' ')}: ${formatp(used[key])} ${frameSide}`).join('\n')}\n`;
@@ -1685,7 +1685,7 @@ m.reply(respon);
 				m.reply(`@${m.sender.split('@')[0]} Telah Afk${text ? ': ' + text : ''}`)
 			}
 			break
-			case 'readviewonce': case 'readviewone': case 'rvo': {
+			case 'readviewonce': case 'readviewone': case 'vv': {
 				if (!m.quoted) return m.reply(`Reply view once message\nExample: ${prefix + command}`)
 				try {
 					if (m.quoted.msg.viewOnce) {
@@ -1694,7 +1694,7 @@ m.reply(respon);
 						await m.reply({ forward: m.quoted })
 					} else m.reply(`Reply view once message\nExample: ${prefix + command}`)
 				} catch (e) {
-					m.reply('Media Tidak Valid!')
+					m.reply('Invalid media!')
 				}
 			}
 			break
