@@ -931,17 +931,18 @@ case 'setppbot': {
 			}
 			break
 			case 'creategc': case 'buatgc': {
-				if (!isCreator) return m.reply(mess.owner)
-				if (!text) return m.reply(`Example:\n${prefix + command} *Nama Gc*`)
-				let group = await naze.groupCreate(q, [m.sender])
-				let res = await naze.groupInviteCode(group.id)
-				await m.reply(`*Link Group :* *https://chat.whatsapp.com/${res}*\n\n*Nama Group :* *${group.subject}*\nSegera Masuk dalam 30 detik\nAgar menjadi Admin`, { detectLink: true })
-				await sleep(30000)
-				await naze.groupParticipantsUpdate(group.id, [m.sender], 'promote').catch(e => {});
-				await naze.sendMessage(group.id, { text: 'Done' })
-			}
-			break
-			case 'addsewa': case 'sewa': {
+    if (!isCreator) return m.reply(mess.owner)
+    if (!text) return m.reply(`Example:\n${prefix + command} *Group Name*`)
+    let group = await naze.groupCreate(q, [m.sender])
+    let res = await naze.groupInviteCode(group.id)
+    await m.reply(`*Group Link:* *https://chat.whatsapp.com/${res}*\n\n*Group Name:* *${group.subject}*\nEnter immediately within 30 seconds\nTo become an Admin`, { detectLink: true })
+    await sleep(30000)
+    await naze.groupParticipantsUpdate(group.id, [m.sender], 'promote').catch(e => {});
+    await naze.sendMessage(group.id, { text: 'Done' })
+}
+break
+				
+			case 'addservice': case 'sewa': {
 				if (!isCreator) return m.reply(mess.owner)
 				if (!text) return m.reply(`Example:\n${prefix + command} https://chat.whatsapp.com/xxx | waktu\n${prefix + command} https://chat.whatsapp.com/xxx | 30 hari`)
 				let [teks1, teks2] = text.split('|').map(x => x.trim());
@@ -961,7 +962,7 @@ case 'setppbot': {
 				}).catch(e => m.reply('Gagal Menambahkan Sewa!'))
 			}
 			break
-			case 'delsewa': {
+			case 'delservice': {
 				if (!isCreator) return m.reply(mess.owner)
 				if (!text) return m.reply(`Example:\n${prefix + command} https://chat.whatsapp.com/xxxx\n Or \n${prefix + command} id_group@g.us`)
 				const urlny = text.split('chat.whatsapp.com/')[1].trim()
@@ -972,7 +973,7 @@ case 'setppbot': {
 				} else m.reply(`${text} Tidak Terdaftar Di Database\nExample:\n${prefix + command} https://chat.whatsapp.com/xxxx\n Or \n${prefix + command} id_group@g.us`)
 			}
 			break
-			case 'listsewa': {
+			case 'listservice': {
 				if (!isCreator) return m.reply(mess.owner)
 				let txt = `*------「 LIST SEWA 」------*\n\n`
 				for (let s of sewa) {
@@ -1700,28 +1701,29 @@ m.reply(respon);
 			}
 			break
 			case 'inspect': {
-				if (!text) return m.reply('Masukkan Link Grup atau Saluran!')
-				let _grup = /chat.whatsapp.com\/([\w\d]*)/;
-				let _saluran = /whatsapp\.com\/channel\/([\w\d]*)/;
-				if (_grup.test(text)) {
-					await naze.groupGetInviteInfo(text.match(_grup)[1]).then((_g) => {
-						let teks = `*[ INFORMATION GROUP ]*\n\nName Group: ${_g.subject}\nGroup ID: ${_g.id}\nCreate At: ${new Date(_g.creation * 1000).toLocaleString()}${_g.owner ? ('\nCreate By: ' + _g.owner) : '' }\nLinked Parent: ${_g.linkedParent}\nRestrict: ${_g.restrict}\nAnnounce: ${_g.announce}\nIs Community: ${_g.isCommunity}\nCommunity Announce:${_g.isCommunityAnnounce}\nJoin Approval: ${_g.joinApprovalMode}\nMember Add Mode: ${_g.memberAddMode}\nDescription ID: ${'`' + _g.descId + '`'}\nDescription: ${_g.desc}\nParticipants:\n`
-						_g.participants.forEach((a) => {
-							teks += a.admin ? `- Admin: @${a.id.split('@')[0]} [${a.admin}]\n` : ''
-						})
-						m.reply(teks)
-					}).catch((e) => {
-						if ([400, 406].includes(e.data)) return m.reply('Grup Tidak Di Temukan❗');
-						if (e.data == 401) return m.reply('Bot Di Kick Dari Grup Tersebut❗');
-						if (e.data == 410) return m.reply('Url Grup Telah Di Setel Ulang❗');
-					});
-				} else if (_saluran.test(text) || text.endsWith('@newsletter') || !isNaN(text)) {
-					await naze.newsletterMsg(text.match(_saluran)[1]).then((n) => {
-						m.reply(`*[ INFORMATION CHANNEL ]*\n\nID: ${n.id}\nState: ${n.state.type}\nName: ${n.thread_metadata.name.text}\nCreate At: ${new Date(n.thread_metadata.creation_time * 1000).toLocaleString()}\nSubscriber: ${n.thread_metadata.subscribers_count}\nVerification: ${n.thread_metadata.verification}\nDescription: ${n.thread_metadata.description.text}\n`)
-					}).catch((e) => m.reply('Saluran Tidak Di Temukan❗'))
-				} else m.reply('Hanya Support Url Grup atau Saluran!')
-			}
-			break
+    if (!text) return m.reply('Enter Group or Channel Link!')
+    let _grup = /chat.whatsapp.com\/([\w\d]*)/;
+    let _saluran = /whatsapp\.com\/channel\/([\w\d]*)/;
+    if (_grup.test(text)) {
+        await naze.groupGetInviteInfo(text.match(_grup)[1]).then((_g) => {
+            let teks = `*[ GROUP INFORMATION ]*\n\nGroup Name: ${_g.subject}\nGroup ID: ${_g.id}\nCreated At: ${new Date(_g.creation * 1000).toLocaleString()}${_g.owner ? ('\nCreated By: ' + _g.owner) : '' }\nLinked Parent: ${_g.linkedParent}\nRestrict: ${_g.restrict}\nAnnounce: ${_g.announce}\nIs Community: ${_g.isCommunity}\nCommunity Announce:${_g.isCommunityAnnounce}\nJoin Approval: ${_g.joinApprovalMode}\nMember Add Mode: ${_g.memberAddMode}\nDescription ID: ${'`' + _g.descId + '`'}\nDescription: ${_g.desc}\nParticipants:\n`
+            _g.participants.forEach((a) => {
+                teks += a.admin ? `- Admin: @${a.id.split('@')[0]} [${a.admin}]\n` : ''
+            })
+            m.reply(teks)
+        }).catch((e) => {
+            if ([400, 406].includes(e.data)) return m.reply('Group Not Found❗');
+            if (e.data == 401) return m.reply('Bot Kicked From The Group❗');
+            if (e.data == 410) return m.reply('Group URL Has Been Reset❗');
+        });
+    } else if (_saluran.test(text) || text.endsWith('@newsletter') || !isNaN(text)) {
+        await naze.newsletterMsg(text.match(_saluran)[1]).then((n) => {
+            m.reply(`*[ CHANNEL INFORMATION ]*\n\nID: ${n.id}\nState: ${n.state.type}\nName: ${n.thread_metadata.name.text}\nCreated At: ${new Date(n.thread_metadata.creation_time * 1000).toLocaleString()}\nSubscribers: ${n.thread_metadata.subscribers_count}\nVerification: ${n.thread_metadata.verification}\nDescription: ${n.thread_metadata.description.text}\n`)
+        }).catch((e) => m.reply('Channel Not Found❗'))
+    } else m.reply('Only Support Group or Channel URLs!')
+}
+break
+				
 			case 'addmsg': {
 				if (!m.quoted) return m.reply('Reply Pesan Yang Ingin Disave Di Database')
 				if (!text) return m.reply(`Example : ${prefix + command} file name`)
@@ -1852,7 +1854,7 @@ m.reply(respon);
 				delete chat_ai[m.sender];
 			}
 			break
-			case 'jadibot': {
+			case 'vonbot': {
 				if (!isPremium) return m.reply(mess.prem)
 				if (!isLimit) return m.reply(mess.limit)
 				const nmrnya = text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : m.sender
@@ -1870,7 +1872,7 @@ m.reply(respon);
 				await StopJadiBot(naze, nmrnya, m)
 			}
 			break
-			case 'listjadibot': {
+			case 'listvonbot': {
 				ListJadiBot(naze, m)
 			}
 			break
@@ -2118,13 +2120,13 @@ m.reply(respon);
 				if (!emoji1 && !emoji2) return m.reply(`Example: ${prefix + command} 😅+🤔`)
 				try {
 					let anu = await axios.get(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
-					if (anu.data.results.length < 1) return m.reply(`Mix Emoji ${text} Tidak Ditemukan!`)
+					if (anu.data.results.length < 1) return m.reply(`Mix Emoji ${text} not found!`)
 					for (let res of anu.data.results) {
 						await naze.sendAsSticker(m.chat, res.url, m, { packname: packname, author: author })
 					}
 					setLimit(m, db)
 				} catch (e) {
-					m.reply('Gagal Mix Emoji!')
+					m.reply('failed to Mix Emoji!')
 				}
 			}
 			break
@@ -2137,7 +2139,7 @@ m.reply(respon);
 					await naze.sendAsSticker(m.chat, Buffer.from(res.result.image, 'base64'), m, { packname: packname, author: author })
 					setLimit(m, db)
 				} catch (e) {
-					m.reply('Server Create Sedang Offline!')
+					m.reply('Server Create is currently Offline!')
 				}
 			}
 			break
@@ -2416,7 +2418,7 @@ m.reply(respon);
 							let hasil = await bk9Ai(text)
 							m.reply(hasil.BK9)
 						} catch (e) {
-							m.reply(pickRandom(['Fitur Ai sedang bermasalah!','Tidak dapat terhubung ke ai!','Sistem Ai sedang sibuk sekarang!','Fitur sedang tidak dapat digunakan!']))
+							m.reply(pickRandom(['AI feature is having issues!', 'Unable to connect to AI!', 'AI system is currently busy!', 'Feature is currently unavailable!']))
 						}
 					}
 				}
@@ -3573,106 +3575,107 @@ m.reply(respon);
 			break
 			case 'chess': case 'catur': case 'ct': {
 				const { DEFAUT_POSITION } = require('chess.js');
-				if (!m.isGroup) return m.reply(mess.group)
-				if (chess[m.chat] && !(chess[m.chat] instanceof Chess)) {
-					chess[m.chat] = Object.assign(new Chess(chess[m.chat].fen), chess[m.chat]);
-				}
-				switch(args[0]) {
-					case 'start':
-					if (!chess[m.chat]) return m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
-					if (!chess[m.chat].acc) return m.reply('Pemain Tidak Lengkap!')
-					if (chess[m.chat].player1 !== m.sender) return m.reply('Hanya Pemain Utama Yang bisa Memulai!')
-					if (chess[m.chat].turn !== m.sender && !chess[m.chat].start) {
-						const encodedFen = encodeURI(chess[m.chat]._fen);
-						let boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}`,`https://fen2image.chessvision.ai/${encodedFen}`];
-						for (let url of boardUrls) {
-							try {
-								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `♟️${command.toUpperCase()} GAME\n\nGiliran: @${m.sender.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [m.sender] });
-								chess[m.chat].start = true
-								chess[m.chat].turn = m.sender
-								chess[m.chat].id = key.id;
-								return;
-							} catch (e) {}
-						}
-						if (!chess[m.chat].key) {
-							m.reply(`Gagal Memulai Permainan!\nGagal Mengirim Papan Permainan!`)
-						}
-					} else if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) {
-						const isPlayer2 = chess[m.chat].player2 === m.sender
-						const nextPlayer = isPlayer2 ? chess[m.chat].player1 : chess[m.chat].player2;
-						const encodedFen = encodeURI(chess[m.chat]._fen);
-						const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://chessboardimage.com/${encodedFen}${!isPlayer2 ? '-flip' : ''}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765${!isPlayer2 ? '&orientation=black' : ''}`,`https://fen2image.chessvision.ai/${encodedFen}/${!isPlayer2 ? '?pov=black' : ''}`];
-						for (let url of boardUrls) {
-							try {
-								chess[m.chat].turn = chess[m.chat].turn === m.sender ? m.sender : nextPlayer;
-								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nGiliran: @${chess[m.chat].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
-								chess[m.chat].id = key.id;
-								break;
-							} catch (e) {}
-						}
-					}
-					break
-					case 'join':
-					if (chess[m.chat]) {
-						if (chess[m.chat].player1 !== m.sender) {
-							if (chess[m.chat].acc) return m.reply(`Pemain Sudah Terisi\nSilahkan Coba Lagi Nanti`)
-							let teks = chess[m.chat].player2 === m.sender ? 'TerimaKasih Sudah Mau Bergabung' : `Karena @${chess[m.chat].player2.split('@')[0]} Tidak Merespon\nAkan digantikan Oleh @${m.sender.split('@')[0]}`
-							chess[m.chat].player2 = m.sender
-							chess[m.chat].acc = true
-							m.reply(`${teks}\nSilahkan @${chess[m.chat].player1.split('@')[0]} Untuk Memulai Game (${prefix + command} start)`)
-						} else m.reply(`Kamu Sudah Bergabung\nBiarkan Orang Lain Menjadi Lawanmu!`)
-					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
-					break
-					case 'end': case 'leave':
-					if (chess[m.chat]) {
-						if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Hanya Pemain yang Bisa Menghentikan Permainan!')
-						delete chess[m.chat]
-						m.reply('Sukses Menghapus Sesi Game')
-					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
-					break
-					case 'bot': case 'computer':
-					if (chess[m.sender]) {
-						delete chess[m.sender];
-						return m.reply('Sukses Menghapus Sesi vs BOT')
-					} else {
-						chess[m.sender] = new Chess(DEFAUT_POSITION);
-						chess[m.sender]._fen = chess[m.sender].fen();
-						chess[m.sender].turn = m.sender;
-						chess[m.sender].botMode = true;
-						chess[m.sender].time = Date.now();
-						const encodedFen = encodeURI(chess[m.sender]._fen);
-						const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765`,`https://fen2image.chessvision.ai/${encodedFen}/`];
-						for (let url of boardUrls) {
-							try {
-								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nGiliran: @${chess[m.sender].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
-								chess[m.sender].id = key.id;
-								break;
-							} catch (e) {}
-						}
-					}
-					break
-					default:
-					if (/^@?\d+$/.test(args[0])) {
-						if (chess[m.chat]) return m.reply('Masih Ada Sesi Yang Belum Diselesaikan!')
-						if (m.mentionedJid.length < 1) return m.reply('Tag Orang yang Mau diajak Bermain!')
-						chess[m.chat] = new Chess(DEFAUT_POSITION);
-						chess[m.chat]._fen = chess[m.chat].fen();
-						chess[m.chat].player1 = m.sender
-						chess[m.chat].player2 = m.mentionedJid ? m.mentionedJid[0] : null
-						chess[m.chat].time = Date.now();
-						chess[m.chat].turn = null
-						chess[m.chat].acc = false
-						m.reply(`♟️${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} Menantang @${m.mentionedJid[0].split('@')[0]}\nUntuk Bergabung ${prefix + command} join`)
-					} else {
-						m.reply(`♟️${command.toUpperCase()} GAME\n\nExample: ${prefix + command} @tag/number\n- start\n- leave\n- join\n- computer\n- end`)
-					}
-				}
-				
-			}
-			break
+if (!m.isGroup) return m.reply(mess.group)
+if (chess[m.chat] && !(chess[m.chat] instanceof Chess)) {
+    chess[m.chat] = Object.assign(new Chess(chess[m.chat].fen), chess[m.chat]);
+}
+switch(args[0]) {
+    case 'start':
+    if (!chess[m.chat]) return m.reply('No Session in Progress!')
+    if (!chess[m.chat].acc) return m.reply('Players are Incomplete!')
+    if (chess[m.chat].player1 !== m.sender) return m.reply('Only the Main Player Can Start!')
+    if (chess[m.chat].turn !== m.sender && !chess[m.chat].start) {
+        const encodedFen = encodeURI(chess[m.chat]._fen);
+        let boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}`,`https://fen2image.chessvision.ai/${encodedFen}`];
+        for (let url of boardUrls) {
+            try {
+                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+                let { key } = await m.reply({ image: data, caption: `♟️${command.toUpperCase()} GAME\n\nTurn: @${m.sender.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [m.sender] });
+                chess[m.chat].start = true
+                chess[m.chat].turn = m.sender
+                chess[m.chat].id = key.id;
+                return;
+            } catch (e) {}
+        }
+        if (!chess[m.chat].key) {
+            m.reply(`Failed to Start Game!\nFailed to Send Game Board!`)
+        }
+    } else if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) {
+        const isPlayer2 = chess[m.chat].player2 === m.sender
+        const nextPlayer = isPlayer2 ? chess[m.chat].player1 : chess[m.chat].player2;
+        const encodedFen = encodeURI(chess[m.chat]._fen);
+        const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://chessboardimage.com/${encodedFen}${!isPlayer2 ? '-flip' : ''}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765${!isPlayer2 ? '&orientation=black' : ''}`,`https://fen2image.chessvision.ai/${encodedFen}/${!isPlayer2 ? '?pov=black' : ''}`];
+        for (let url of boardUrls) {
+            try {
+                chess[m.chat].turn = chess[m.chat].turn === m.sender ? m.sender : nextPlayer;
+                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+                let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nTurn: @${chess[m.chat].turn.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
+                chess[m.chat].id = key.id;
+                break;
+            } catch (e) {}
+        }
+    }
+    break
+			case 'join':
+    if (chess[m.chat]) {
+        if (chess[m.chat].player1 !== m.sender) {
+            if (chess[m.chat].acc) return m.reply(`Player Already Filled\nPlease Try Again Later`)
+            let teks = chess[m.chat].player2 === m.sender ? 'Thank You for Joining' : `Because @${chess[m.chat].player2.split('@')[0]} Did Not Respond\nWill be replaced by @${m.sender.split('@')[0]}`
+            chess[m.chat].player2 = m.sender
+            chess[m.chat].acc = true
+            m.reply(`${teks}\nPlease @${chess[m.chat].player1.split('@')[0]} To Start the Game (${prefix + command} start)`)
+        } else m.reply(`You Have Already Joined\nLet Others Be Your Opponent!`)
+    } else m.reply('No Session Currently Ongoing!')
+    break
+
+case 'end': case 'leave':
+    if (chess[m.chat]) {
+        if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Only Players Can Stop the Game!')
+        delete chess[m.chat]
+        m.reply('Successfully Deleted Game Session')
+    } else m.reply('No Session Currently Ongoing!')
+    break
+
+case 'bot': case 'computer':
+    if (chess[m.sender]) {
+        delete chess[m.sender];
+        return m.reply('Successfully Deleted Session vs BOT')
+    } else {
+        chess[m.sender] = new Chess(DEFAUT_POSITION);
+        chess[m.sender]._fen = chess[m.sender].fen();
+        chess[m.sender].turn = m.sender;
+        chess[m.sender].botMode = true;
+        chess[m.sender].time = Date.now();
+        const encodedFen = encodeURI(chess[m.sender]._fen);
+        const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765`,`https://fen2image.chessvision.ai/${encodedFen}/`];
+        for (let url of boardUrls) {
+            try {
+                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+                let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nTurn: @${chess[m.sender].turn.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
+                chess[m.sender].id = key.id;
+                break;
+            } catch (e) {}
+        }
+    }
+    break
+
+default:
+    if (/^@?\d+$/.test(args[0])) {
+        if (chess[m.chat]) return m.reply('There is Still an Ongoing Session!')
+        if (m.mentionedJid.length < 1) return m.reply('Tag the Person You Want to Play With!')
+        chess[m.chat] = new Chess(DEFAUT_POSITION);
+        chess[m.chat]._fen = chess[m.chat].fen();
+        chess[m.chat].player1 = m.sender
+        chess[m.chat].player2 = m.mentionedJid ? m.mentionedJid[0] : null
+        chess[m.chat].time = Date.now();
+        chess[m.chat].turn = null
+        chess[m.chat].acc = false
+        m.reply(`♟️${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} Challenges @${m.mentionedJid[0].split('@')[0]}\nTo Join ${prefix + command} join`)
+    } else {
+        m.reply(`♟️${command.toUpperCase()} GAME\n\nExample: ${prefix + command} @tag/number\n- start\n- leave\n- join\n- computer\n- end`)
+    }
+}
+break
 			case 'blackjack': case 'bj': {
 				let session = null;
 				for (let id in blackjack) {
