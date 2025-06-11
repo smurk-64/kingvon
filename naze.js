@@ -3575,246 +3575,207 @@ break
 			break
 			case 'chess': case 'catur': case 'ct': {
 				const { DEFAUT_POSITION } = require('chess.js');
-if (!m.isGroup) return m.reply(mess.group)
-if (chess[m.chat] && !(chess[m.chat] instanceof Chess)) {
-    chess[m.chat] = Object.assign(new Chess(chess[m.chat].fen), chess[m.chat]);
-}
-switch(args[0]) {
-    case 'start':
-    if (!chess[m.chat]) return m.reply('No Session in Progress!')
-    if (!chess[m.chat].acc) return m.reply('Players are Incomplete!')
-    if (chess[m.chat].player1 !== m.sender) return m.reply('Only the Main Player Can Start!')
-    if (chess[m.chat].turn !== m.sender && !chess[m.chat].start) {
-        const encodedFen = encodeURI(chess[m.chat]._fen);
-        let boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}`,`https://fen2image.chessvision.ai/${encodedFen}`];
-        for (let url of boardUrls) {
-            try {
-                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-                let { key } = await m.reply({ image: data, caption: `♟️${command.toUpperCase()} GAME\n\nTurn: @${m.sender.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [m.sender] });
-                chess[m.chat].start = true
-                chess[m.chat].turn = m.sender
-                chess[m.chat].id = key.id;
-                return;
-            } catch (e) {}
-        }
-        if (!chess[m.chat].key) {
-            m.reply(`Failed to Start Game!\nFailed to Send Game Board!`)
-        }
-    } else if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) {
-        const isPlayer2 = chess[m.chat].player2 === m.sender
-        const nextPlayer = isPlayer2 ? chess[m.chat].player1 : chess[m.chat].player2;
-        const encodedFen = encodeURI(chess[m.chat]._fen);
-        const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://chessboardimage.com/${encodedFen}${!isPlayer2 ? '-flip' : ''}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765${!isPlayer2 ? '&orientation=black' : ''}`,`https://fen2image.chessvision.ai/${encodedFen}/${!isPlayer2 ? '?pov=black' : ''}`];
-        for (let url of boardUrls) {
-            try {
-                chess[m.chat].turn = chess[m.chat].turn === m.sender ? m.sender : nextPlayer;
-                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-                let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nTurn: @${chess[m.chat].turn.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
-                chess[m.chat].id = key.id;
-                break;
-            } catch (e) {}
-        }
-    }
-    break
-			case 'join':
-    if (chess[m.chat]) {
-        if (chess[m.chat].player1 !== m.sender) {
-            if (chess[m.chat].acc) return m.reply(`Player Already Filled\nPlease Try Again Later`)
-            let teks = chess[m.chat].player2 === m.sender ? 'Thank You for Joining' : `Because @${chess[m.chat].player2.split('@')[0]} Did Not Respond\nWill be replaced by @${m.sender.split('@')[0]}`
-            chess[m.chat].player2 = m.sender
-            chess[m.chat].acc = true
-            m.reply(`${teks}\nPlease @${chess[m.chat].player1.split('@')[0]} To Start the Game (${prefix + command} start)`)
-        } else m.reply(`You Have Already Joined\nLet Others Be Your Opponent!`)
-    } else m.reply('No Session Currently Ongoing!')
-    break
-
-case 'end': case 'leave':
-    if (chess[m.chat]) {
-        if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Only Players Can Stop the Game!')
-        delete chess[m.chat]
-        m.reply('Successfully Deleted Game Session')
-    } else m.reply('No Session Currently Ongoing!')
-    break
-
-case 'bot': case 'computer':
-    if (chess[m.sender]) {
-        delete chess[m.sender];
-        return m.reply('Successfully Deleted Session vs BOT')
-    } else {
-        chess[m.sender] = new Chess(DEFAUT_POSITION);
-        chess[m.sender]._fen = chess[m.sender].fen();
-        chess[m.sender].turn = m.sender;
-        chess[m.sender].botMode = true;
-        chess[m.sender].time = Date.now();
-        const encodedFen = encodeURI(chess[m.sender]._fen);
-        const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765`,`https://fen2image.chessvision.ai/${encodedFen}/`];
-        for (let url of boardUrls) {
-            try {
-                const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-                let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nTurn: @${chess[m.sender].turn.split('@')[0]}\n\nReply to This Message to continue playing!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
-                chess[m.sender].id = key.id;
-                break;
-            } catch (e) {}
-        }
-    }
-    break
-
-default:
-    if (/^@?\d+$/.test(args[0])) {
-        if (chess[m.chat]) return m.reply('There is Still an Ongoing Session!')
-        if (m.mentionedJid.length < 1) return m.reply('Tag the Person You Want to Play With!')
-        chess[m.chat] = new Chess(DEFAUT_POSITION);
-        chess[m.chat]._fen = chess[m.chat].fen();
-        chess[m.chat].player1 = m.sender
-        chess[m.chat].player2 = m.mentionedJid ? m.mentionedJid[0] : null
-        chess[m.chat].time = Date.now();
-        chess[m.chat].turn = null
-        chess[m.chat].acc = false
-        m.reply(`♟️${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} Challenges @${m.mentionedJid[0].split('@')[0]}\nTo Join ${prefix + command} join`)
-    } else {
-        m.reply(`♟️${command.toUpperCase()} GAME\n\nExample: ${prefix + command} @tag/number\n- start\n- leave\n- join\n- computer\n- end`)
-    }
-}
-break
+				if (!m.isGroup) return m.reply(mess.group)
+				if (chess[m.chat] && !(chess[m.chat] instanceof Chess)) {
+					chess[m.chat] = Object.assign(new Chess(chess[m.chat].fen), chess[m.chat]);
+				}
+				switch(args[0]) {
+					case 'start':
+					if (!chess[m.chat]) return m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
+					if (!chess[m.chat].acc) return m.reply('Pemain Tidak Lengkap!')
+					if (chess[m.chat].player1 !== m.sender) return m.reply('Hanya Pemain Utama Yang bisa Memulai!')
+					if (chess[m.chat].turn !== m.sender && !chess[m.chat].start) {
+						const encodedFen = encodeURI(chess[m.chat]._fen);
+						let boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}`,`https://fen2image.chessvision.ai/${encodedFen}`];
+						for (let url of boardUrls) {
+							try {
+								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸${command.toUpperCase()} GAME\n\nGiliran: @${m.sender.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [m.sender] });
+								chess[m.chat].start = true
+								chess[m.chat].turn = m.sender
+								chess[m.chat].id = key.id;
+								return;
+							} catch (e) {}
+						}
+						if (!chess[m.chat].key) {
+							m.reply(`Gagal Memulai Permainan!\nGagal Mengirim Papan Permainan!`)
+						}
+					} else if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) {
+						const isPlayer2 = chess[m.chat].player2 === m.sender
+						const nextPlayer = isPlayer2 ? chess[m.chat].player1 : chess[m.chat].player2;
+						const encodedFen = encodeURI(chess[m.chat]._fen);
+						const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside${!isPlayer2 ? '&flip=true' : ''}`,`https://chessboardimage.com/${encodedFen}${!isPlayer2 ? '-flip' : ''}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765${!isPlayer2 ? '&orientation=black' : ''}`,`https://fen2image.chessvision.ai/${encodedFen}/${!isPlayer2 ? '?pov=black' : ''}`];
+						for (let url of boardUrls) {
+							try {
+								chess[m.chat].turn = chess[m.chat].turn === m.sender ? m.sender : nextPlayer;
+								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸CHESS GAME\n\nGiliran: @${chess[m.chat].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
+								chess[m.chat].id = key.id;
+								break;
+							} catch (e) {}
+						}
+					}
+					break
+					case 'join':
+					if (chess[m.chat]) {
+						if (chess[m.chat].player1 !== m.sender) {
+							if (chess[m.chat].acc) return m.reply(`Pemain Sudah Terisi\nSilahkan Coba Lagi Nanti`)
+							let teks = chess[m.chat].player2 === m.sender ? 'TerimaKasih Sudah Mau Bergabung' : `Karena @${chess[m.chat].player2.split('@')[0]} Tidak Merespon\nAkan digantikan Oleh @${m.sender.split('@')[0]}`
+							chess[m.chat].player2 = m.sender
+							chess[m.chat].acc = true
+							m.reply(`${teks}\nSilahkan @${chess[m.chat].player1.split('@')[0]} Untuk Memulai Game (${prefix + command} start)`)
+						} else m.reply(`Kamu Sudah Bergabung\nBiarkan Orang Lain Menjadi Lawanmu!`)
+					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
+					break
+					case 'end': case 'leave':
+					if (chess[m.chat]) {
+						if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Hanya Pemain yang Bisa Menghentikan Permainan!')
+						delete chess[m.chat]
+						m.reply('Sukses Menghapus Sesi Game')
+					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
+					break
+					case 'bot': case 'computer':
+					if (chess[m.sender]) {
+						delete chess[m.sender];
+						return m.reply('Sukses Menghapus Sesi vs BOT')
+					} else {
+						chess[m.sender] = new Chess(DEFAUT_POSITION);
+						chess[m.sender]._fen = chess[m.sender].fen();
+						chess[m.sender].turn = m.sender;
+						chess[m.sender].botMode = true;
+						chess[m.sender].time = Date.now();
+						const encodedFen = encodeURI(chess[m.sender]._fen);
+						const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765`,`https://fen2image.chessvision.ai/${encodedFen}/`];
+						for (let url of boardUrls) {
+							try {
+								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸CHESS GAME\n\nGiliran: @${chess[m.sender].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
+								chess[m.sender].id = key.id;
+								break;
+							} catch (e) {}
+						}
+					}
+					break
+					default:
+					if (/^@?\d+$/.test(args[0])) {
+						if (chess[m.chat]) return m.reply('Masih Ada Sesi Yang Belum Diselesaikan!')
+						if (m.mentionedJid.length < 1) return m.reply('Tag Orang yang Mau diajak Bermain!')
+						chess[m.chat] = new Chess(DEFAUT_POSITION);
+						chess[m.chat]._fen = chess[m.chat].fen();
+						chess[m.chat].player1 = m.sender
+						chess[m.chat].player2 = m.mentionedJid ? m.mentionedJid[0] : null
+						chess[m.chat].time = Date.now();
+						chess[m.chat].turn = null
+						chess[m.chat].acc = false
+						m.reply(`â™Ÿï¸${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} Menantang @${m.mentionedJid[0].split('@')[0]}\nUntuk Bergabung ${prefix + command} join`)
+					} else {
+						m.reply(`â™Ÿï¸${command.toUpperCase()} GAME\n\nExample: ${prefix + command} @tag/number\n- start\n- leave\n- join\n- computer\n- end`)
+					}
+				}
+				
+			}
+			break
 			case 'blackjack': case 'bj': {
-    let session = null;
-    for (let id in blackjack) {
-        if (blackjack[id].players.find(p => p.id === m.sender)) {
-            session = blackjack[id];
-            break;
-        }
-    }
-
-    if (session && !(session instanceof Blackjack)) {
-        session = Object.assign(new Blackjack(session), session)
-    }
-
-    if (blackjack[m.chat] && !(blackjack[m.chat] instanceof Blackjack)) {
-        blackjack[m.chat] = Object.assign(new Blackjack(blackjack[m.chat]), blackjack[m.chat])
-    }
-
-    switch (args[0]) {
-        case 'create': case 'join':
-            if (!m.isGroup) return m.reply(mess.group)
-
-            if (blackjack[m.chat] || session) {
-                if (blackjack[m.chat]?.players?.some(a => a.id === m.sender)) return m.reply('Kamu Sudah Bergabung!')
-                if (session) return m.reply('Kamu sudah bergabung di sesi Grup lain! Keluar dulu sebelum bergabung di sesi baru.');
-                if (blackjack[m.chat].players.length > 10) return m.reply(`Jumlah Pemain Sudah Maksimal\nSilahkan Memulai Permainan\n${prefix + command} start`);
-
-                blackjack[m.chat].players.push({ id: m.sender, cards: [] });
-                m.reply('Sukses Join Game Blackjack')
-            } else {
-                blackjack[m.chat] = new Blackjack({ id: m.chat, host: m.sender });
-                blackjack[m.chat].players.push({ id: m.sender, cards: [] });
-                m.reply('Sukses Create Game Blackjack')
-            }
-            break
-
-        case 'start':
-            if (!m.isGroup) return m.reply(mess.group)
-            if (!blackjack[m.chat]) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
-            if (blackjack[m.chat]?.host !== m.sender) return m.reply(`Hanya Pembuat Room @${blackjack[m.chat].host.split('@')[0]} yang bisa Memulai Sessi!`)
-            if (blackjack[m.chat].players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
-            if (blackjack[m.chat].started) return m.reply('Game Sudah Dimulai Sejak Awal!')
-
-            blackjack[m.chat].distributeCards();
-            m.reply(`🃏GAME BLACKJACK♦️\nStart Card: ${blackjack[m.chat].startCard.rank + blackjack[m.chat].startCard.suit}\nDeck Count: ${blackjack[m.chat].deck.length}\n${blackjack[m.chat].players.map(a => `- @${a.id.split('@')[0]} : (${a.cards.length} kartu)`).join('\n')}\n\nCek Private Chat\nwa.me/${botNumber.split('@')[0]}`);
-
-            for (let p of blackjack[m.chat].players) {
-                const startCard = blackjack[m.chat].startCard;
-                let buttons = p.cards.map(a => ({
-                    name: 'quick_reply',
-                    buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })
-                }));
-                if (!blackjack[m.chat].hasMatching(p.id)) buttons.push({
-                    name: 'quick_reply',
-                    buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` })
-                });
-                await naze.sendListMsg(p.id, { text: `Start Card: ${startCard.rank + startCard.suit}`, footer: `${p.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
-            }
-            break
-
-        case 'hit': case 'minum': {
-            if (!session) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
-            if (!session.started) return m.reply('Game Belum Di Mulai!')
-            if (session.players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
-            if (!session.players?.some(a => a.id === m.sender)) return m.reply('Kamu belum bergabung!');
-            if (!args[0]) return m.reply(`Gunakan format:\n${prefix + command} play <kartu>\nContoh: ${prefix + command} hit`);
-
-            const player = session.players.find(p => p.id === m.sender);
-            const hitIndex = player.cards.findIndex(c => (c.rank + c.suit) === (session.startCard.rank + session.startCard.suit));
-
-            if (session.submitCard.some(s => s.id === m.sender) || session.skip.includes(m.sender)) {
-                return m.reply('Kamu sudah bermain di ronde ini!');
-            }
-
-            if (!session.hasMatching(m.sender)) {
-                if (session.deck.length) {
-                    const newCard = session.deck.shift();
-                    player.cards.push(newCard);
-                    await sleep(1000);
-
-                    let buttons = player.cards.map(a => ({
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })
-                    }));
-
-                    if (!session.hasMatching(player.id)) buttons.push({
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` })
-                    });
-
-                    await naze.sendListMsg(player.id, { text: `Start Card: ${session.startCard.rank + session.startCard.suit}`, footer: `${player.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
-                } else {
-                    let reuse = session.reuseSubmitCardsForDrinking()
-                    await m.reply(reuse.msg)
-
-                    if (!session.skip.find(a => a.id === player.id)) session.skip.push({ id: player.id });
-                    await m.reply('Deck sudah habis, kamu tidak bisa mengambil kartu. Dilewati.');
-                    await naze.sendText(session.id, `@${m.sender.split('@')[0]} dilewati karena deck habis.`, m);
-
-                    if ((session.submitCard.length + session.skip.length) === session.players.length) {
-                        const result = session.resolveRound();
-                        if (result) {
-                            await naze.sendText(session.id, result, m);
-                            if (session.players.length === 1) {
-                                await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
-                                delete blackjack[session.id];
-                                return;
-                            }
-                            const leaderCards = session.players.find(a => a.id === session.leader);
-                            let buttons = leaderCards.cards.map(c => ({
-                                name: 'quick_reply',
-                                buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })
-                            }));
-                            await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
-                        }
-                    }
-                }
-            } else {
-                m.reply(`Kamu masih punya kartu dengan suit ${session.startCard.suit}, mainkan dulu sebelum minum!`);
-            }
-
-            if ((session.submitCard.length + session.skip.length) === session.players.length) {
-                const result = session.resolveRound();
-                if (result) {
-                    await naze.sendText(session.id, result, m);
-                    if (session.players.length === 1) {
-                        await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
-                        delete blackjack[session.id];
-                        return;
-                    }
-                    const leaderCards = session.players.find(a => a.id === session.leader);
-                    let buttons = leaderCards.cards.map(c => ({
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })
-                    }));
-                    await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
-                }
-	      }
-            }
-            break
+				let session = null;
+				for (let id in blackjack) {
+					if (blackjack[id].players.find(p => p.id === m.sender)) {
+						session = blackjack[id];
+						break;
+					}
+				}
+				if (session && !(session instanceof Blackjack)) {
+					session = Object.assign(new Blackjack(session), session)
+				}
+				if (blackjack[m.chat] && !(blackjack[m.chat] instanceof Blackjack)) {
+					blackjack[m.chat] = Object.assign(new Blackjack(blackjack[m.chat]), blackjack[m.chat])
+				}
+				switch(args[0]) {
+					case 'create': case 'join':
+					if (!m.isGroup) return m.reply(mess.group)
+					if (blackjack[m.chat] || session) {
+						if (blackjack[m.chat]?.players?.some(a => a.id === m.sender)) return m.reply('Kamu Sudah Bergabung!')
+						if (session) return m.reply('Kamu sudah bergabung di sesi Grup lain! Keluar dulu sebelum bergabung di sesi baru.');
+						if (blackjack[m.chat].players.length > 10) return m.reply(`Jumlah Pemain Sudah Maksimal\nSilahkan Memulai Permainan\n${prefix + command} start`);
+						blackjack[m.chat].players.push({ id: m.sender, cards: [] });
+						m.reply('Sukses Join Game Blackjack')
+					} else {
+						blackjack[m.chat] = new Blackjack({ id: m.chat, host: m.sender });
+						blackjack[m.chat].players.push({ id: m.sender, cards: [] });
+						m.reply('Sukses Create Game Blackjack')
+					}
+					break
+					case 'start':
+					if (!m.isGroup) return m.reply(mess.group)
+					if (!blackjack[m.chat]) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
+					if (blackjack[m.chat]?.host !== m.sender) return m.reply(`Hanya Pembuat Room @${blackjack[m.chat].host.split('@')[0]} yang bisa Memulai Sessi!`)
+					if (blackjack[m.chat].players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
+					if (blackjack[m.chat].started) return m.reply('Game Sudah Dimulai Sejak Awal!')
+					blackjack[m.chat].distributeCards();
+					m.reply(`ðŸƒGAME BLACKJACKâ™¦ï¸\nStart Card: ${blackjack[m.chat].startCard.rank + blackjack[m.chat].startCard.suit}\nDeck Count: ${blackjack[m.chat].deck.length}\n${blackjack[m.chat].players.map(a => `- @${a.id.split('@')[0]} : (${a.cards.length} kartu)`).join('\n')}\n\nCek Private Chat\nwa.me/${botNumber.split('@')[0]}`);
+					for (let p of blackjack[m.chat].players) {
+						const startCard = blackjack[m.chat].startCard;
+						let buttons = p.cards.map(a => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })}));
+						if (!blackjack[m.chat].hasMatching(p.id)) buttons.push({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` }) });
+						await naze.sendListMsg(p.id, { text: `Start Card: ${startCard.rank + startCard.suit}`, footer: `${p.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
+					}
+					break
+					case 'hit': case 'minum': {
+						if (!session) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
+						if (!session.started) return m.reply('Game Belum Di Mulai!')
+						if (session.players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
+						if (!session.players?.some(a => a.id === m.sender)) return m.reply('Kamu belum bergabung!');
+						if (!args[0]) return m.reply(`Gunakan format:\n${prefix + command} play <kartu>\nContoh: ${prefix + command} hit`);
+						const player = session.players.find(p => p.id === m.sender);
+						const hitIndex = player.cards.findIndex(c => (c.rank + c.suit) === (session.startCard.rank + session.startCard.suit));
+						if (session.submitCard.some(s => s.id === m.sender) || session.skip.includes(m.sender)) {
+							return m.reply('Kamu sudah bermain di ronde ini!');
+						}
+						if (!session.hasMatching(m.sender)) {
+							if (session.deck.length) {
+								const newCard = session.deck.shift();
+								player.cards.push(newCard);
+								await sleep(1000);
+								let buttons = player.cards.map(a => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })}));
+								if (!session.hasMatching(player.id)) buttons.push({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` }) });
+								await naze.sendListMsg(player.id, { text: `Start Card: ${session.startCard.rank + session.startCard.suit}`, footer: `${player.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
+							} else {
+								let reuse = session.reuseSubmitCardsForDrinking()
+								await m.reply(reuse.msg)
+								if (!session.skip.find(a => a.id === player.id)) session.skip.push({ id: player.id });
+								await m.reply('Deck sudah habis, kamu tidak bisa mengambil kartu. Dilewati.');
+								await naze.sendText(session.id, `@${m.sender.split('@')[0]} dilewati karena deck habis.`, m);
+								if ((session.submitCard.length + session.skip.length) === session.players.length) {
+									const result = session.resolveRound();
+									if (result) {
+										await naze.sendText(session.id, result, m);
+										if (session.players.length === 1) {
+											await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
+											delete blackjack[session.id];
+											return;
+										}
+										const leaderCards = session.players.find(a => a.id === session.leader);
+										let buttons = leaderCards.cards.map(c => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })}));
+										await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
+									}
+								}
+							}
+						} else m.reply(`Kamu masih punya kartu dengan suit ${session.startCard.suit}, mainkan dulu sebelum minum!`);
+						if ((session.submitCard.length + session.skip.length) === session.players.length) {
+							const result = session.resolveRound();
+							if (result) {
+								await naze.sendText(session.id, result, m);
+								if (session.players.length === 1) {
+									await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
+									delete blackjack[session.id];
+									return;
+								}
+								const leaderCards = session.players.find(a => a.id === session.leader);
+								let buttons = leaderCards.cards.map(c => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })}));
+								await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
+							}
+						}
+					}
+					break
 				case 'play': {
 						if (!session) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
 						if (!session.started) return m.reply('Game Belum Di Mulai!')
