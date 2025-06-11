@@ -29,7 +29,7 @@ async function JadiBot(conn, from, m, store) {
 					return msg?.message || ''
 				}
 				return {
-					conversation: 'Halo Saya Adalah Bot'
+					conversation: 'Hello i am KINGVON MD'
 				}
 			}
 			
@@ -86,7 +86,7 @@ async function JadiBot(conn, from, m, store) {
 						m.reply('Scan again...');
 						StopJadiBot(conn, from, m)
 					} else {
-						m.reply('Anda Sudah Tidak Lagi Menjadi Bot!')
+						m.reply('You are no longer a Bot!')
 					}
 				}
 				if (connection == 'open') {
