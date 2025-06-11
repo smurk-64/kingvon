@@ -3581,16 +3581,16 @@ break
 				}
 				switch(args[0]) {
 					case 'start':
-					if (!chess[m.chat]) return m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
-					if (!chess[m.chat].acc) return m.reply('Pemain Tidak Lengkap!')
-					if (chess[m.chat].player1 !== m.sender) return m.reply('Hanya Pemain Utama Yang bisa Memulai!')
+					if (!chess[m.chat]) return m.reply('There is no active sessy!')
+					if (!chess[m.chat].acc) return m.reply('Incomplete players!')
+					if (chess[m.chat].player1 !== m.sender) return m.reply('Only the host can start the game!')
 					if (chess[m.chat].turn !== m.sender && !chess[m.chat].start) {
 						const encodedFen = encodeURI(chess[m.chat]._fen);
 						let boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}`,`https://fen2image.chessvision.ai/${encodedFen}`];
 						for (let url of boardUrls) {
 							try {
 								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸${command.toUpperCase()} GAME\n\nGiliran: @${m.sender.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [m.sender] });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸${command.toUpperCase()} GAME\n\nGiliran: @${m.sender.split('@')[0]}\n\nReply Tap this message to continue playing!\nExample: from to -> b1 c3`, mentions: [m.sender] });
 								chess[m.chat].start = true
 								chess[m.chat].turn = m.sender
 								chess[m.chat].id = key.id;
@@ -3598,7 +3598,7 @@ break
 							} catch (e) {}
 						}
 						if (!chess[m.chat].key) {
-							m.reply(`Gagal Memulai Permainan!\nGagal Mengirim Papan Permainan!`)
+							m.reply(`Failed to start the game!\nFailed to send game board!`)
 						}
 					} else if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) {
 						const isPlayer2 = chess[m.chat].player2 === m.sender
@@ -3609,7 +3609,7 @@ break
 							try {
 								chess[m.chat].turn = chess[m.chat].turn === m.sender ? m.sender : nextPlayer;
 								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸CHESS GAME\n\nGiliran: @${chess[m.chat].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸CHESS GAME\n\nshift: @${chess[m.chat].turn.split('@')[0]}\n\nReply Tap this message to continue playing!\nExample: from to -> b1 c3`, mentions: [chess[m.chat].turn] });
 								chess[m.chat].id = key.id;
 								break;
 							} catch (e) {}
@@ -3619,25 +3619,25 @@ break
 					case 'join':
 					if (chess[m.chat]) {
 						if (chess[m.chat].player1 !== m.sender) {
-							if (chess[m.chat].acc) return m.reply(`Pemain Sudah Terisi\nSilahkan Coba Lagi Nanti`)
-							let teks = chess[m.chat].player2 === m.sender ? 'TerimaKasih Sudah Mau Bergabung' : `Karena @${chess[m.chat].player2.split('@')[0]} Tidak Merespon\nAkan digantikan Oleh @${m.sender.split('@')[0]}`
+							if (chess[m.chat].acc) return m.reply(`Player slot is full\nTry again later`)
+							let teks = chess[m.chat].player2 === m.sender ? 'Thanks for joining' : `Because @${chess[m.chat].player2.split('@')[0]} No response\nWill be replaced by@${m.sender.split('@')[0]}`
 							chess[m.chat].player2 = m.sender
 							chess[m.chat].acc = true
-							m.reply(`${teks}\nSilahkan @${chess[m.chat].player1.split('@')[0]} Untuk Memulai Game (${prefix + command} start)`)
-						} else m.reply(`Kamu Sudah Bergabung\nBiarkan Orang Lain Menjadi Lawanmu!`)
-					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
+							m.reply(`${teks}\nGo ahead @${chess[m.chat].player1.split('@')[0]} Please start the game by typing (${prefix + command} start)`)
+						} else m.reply(`You have already joined\nPlease wait for another player to be your opponent!`)
+					} else m.reply('No game session is currently in progress!')
 					break
 					case 'end': case 'leave':
 					if (chess[m.chat]) {
-						if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Hanya Pemain yang Bisa Menghentikan Permainan!')
+						if (![chess[m.chat].player1, chess[m.chat].player2].includes(m.sender)) return m.reply('Only the player can stop the game!')
 						delete chess[m.chat]
-						m.reply('Sukses Menghapus Sesi Game')
-					} else m.reply('Tidak Ada Sesi Yang Sedang Berlangsung!')
+						m.reply('Game session successfully deleted')
+					} else m.reply('No game session is currently in progress!')
 					break
 					case 'bot': case 'computer':
 					if (chess[m.sender]) {
 						delete chess[m.sender];
-						return m.reply('Sukses Menghapus Sesi vs BOT')
+						return m.reply('Succesfully deleted session vs KINGVON BOT')
 					} else {
 						chess[m.sender] = new Chess(DEFAUT_POSITION);
 						chess[m.sender]._fen = chess[m.sender].fen();
@@ -3658,8 +3658,8 @@ break
 					break
 					default:
 					if (/^@?\d+$/.test(args[0])) {
-						if (chess[m.chat]) return m.reply('Masih Ada Sesi Yang Belum Diselesaikan!')
-						if (m.mentionedJid.length < 1) return m.reply('Tag Orang yang Mau diajak Bermain!')
+						if (chess[m.chat]) return m.reply('There is still unfinished session!')
+						if (m.mentionedJid.length < 1) return m.reply('Tag the person you want to invite to play!')
 						chess[m.chat] = new Chess(DEFAUT_POSITION);
 						chess[m.chat]._fen = chess[m.chat].fen();
 						chess[m.chat].player1 = m.sender
@@ -3667,7 +3667,7 @@ break
 						chess[m.chat].time = Date.now();
 						chess[m.chat].turn = null
 						chess[m.chat].acc = false
-						m.reply(`â™Ÿï¸${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} Menantang @${m.mentionedJid[0].split('@')[0]}\nUntuk Bergabung ${prefix + command} join`)
+						m.reply(`â™Ÿï¸${command.toUpperCase()} GAME\n\n@${m.sender.split('@')[0]} has challenged @${m.mentionedJid[0].split('@')[0]}\nType ${prefix + command} join`)
 					} else {
 						m.reply(`â™Ÿï¸${command.toUpperCase()} GAME\n\nExample: ${prefix + command} @tag/number\n- start\n- leave\n- join\n- computer\n- end`)
 					}
