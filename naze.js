@@ -1859,17 +1859,17 @@ break
 				if (!isLimit) return m.reply(mess.limit)
 				const nmrnya = text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : m.sender
 				const onWa = await naze.onWhatsApp(nmrnya)
-				if (!onWa.length > 0) return m.reply('Nomer Tersebut Tidak Terdaftar Di Whatsapp!')
+				if (!onWa.length > 0) return m.reply('Number is not registered on WhatsApp Whatsapp!')
 				await JadiBot(naze, nmrnya, m, store)
-				m.reply(`Gunakan ${prefix}stopjadibot\nUntuk Berhenti`)
+				m.reply(`Use ${prefix}stopvonbot\nto exit KINGVON MD`)
 				setLimit(m, db)
 			}
 			break
-			case 'stopjadibot': case 'deljadibot': {
+			case 'stopvonbot': case 'delvonbot': {
 				const nmrnya = text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : m.sender
 				const onWa = await naze.onWhatsApp(nmrnya)
-				if (!onWa.length > 0) return m.reply('Nomer Tersebut Tidak Terdaftar Di Whatsapp!')
-				await StopJadiBot(naze, nmrnya, m)
+				if (!onWa.length > 0) return m.reply('The number is not registered on WhatsApp!')
+				await StopvonBot(naze, nmrnya, m)
 			}
 			break
 			case 'listvonbot': {
@@ -1881,7 +1881,7 @@ break
 			case 'fetch': case 'get': {
 				if (!isPremium) return m.reply(mess.prem)
 				if (!isLimit) return m.reply(mess.limit)
-				if (!/^https?:\/\//.test(text)) return m.reply('Awali dengan http:// atau https://');
+				if (!/^https?:\/\//.test(text)) return m.reply('start with http:// or https://');
 				try {
 					const res = await axios.get(isUrl(text) ? isUrl(text)[0] : text)
 					if (!/text|json|html|plain/.test(res.headers['content-type'])) {
@@ -1894,7 +1894,7 @@ break
 			}
 			break
 			case 'toaud': case 'toaudio': {
-				if (!/video|audio/.test(mime)) return m.reply(`Kirim/Reply Video/Audio Yang Ingin Dijadikan Audio Dengan Caption ${prefix + command}`)
+				if (!/video|audio/.test(mime)) return m.reply(`Send/Reply Video/Audio you want to convert to audio with caption ${prefix + command}`)
 				m.reply(mess.wait)
 				let media = await quoted.download()
 				let audio = await toAudio(media, 'mp4')
@@ -1902,15 +1902,15 @@ break
 			}
 			break
 			case 'tomp3': {
-				if (!/video|audio/.test(mime)) return m.reply(`Kirim/Reply Video/Audio Yang Ingin Dijadikan Audio Dengan Caption ${prefix + command}`)
+				if (!/video|audio/.test(mime)) return m.reply(`Send/Reply Video/Audio you want to convert to Audio with Caption ${prefix + command}`)
 				m.reply(mess.wait)
 				let media = await quoted.download()
 				let audio = await toAudio(media, 'mp4')
-				await m.reply({ document: audio, mimetype: 'audio/mpeg', fileName: `Convert By Naze Bot.mp3`})
+				await m.reply({ document: audio, mimetype: 'audio/mpeg', fileName: `Convert By KINGVON Bot.mp3`})
 			}
 			break
 			case 'tovn': case 'toptt': case 'tovoice': {
-				if (!/video|audio/.test(mime)) return m.reply(`Kirim/Reply Video/Audio Yang Ingin Dijadikan Audio Dengan Caption ${prefix + command}`)
+				if (!/video|audio/.test(mime)) return m.reply(`Kirim/Reply Video/Audio You want to convert to audio with  Caption ${prefix + command}`)
 				m.reply(mess.wait)
 				let media = await quoted.download()
 				let audio = await toPTT(media, 'mp4')
@@ -1918,13 +1918,13 @@ break
 			}
 			break
 			case 'togif': {
-				if (!/webp|video/.test(mime)) return m.reply(`Reply Video/Stiker dengan caption *${prefix + command}*`)
+				if (!/webp|video/.test(mime)) return m.reply(`Reply Video/Stiker with caption *${prefix + command}*`)
 				m.reply(mess.wait)
 				let media = await naze.downloadAndSaveMediaMessage(qmsg)
 				let ran = `./database/sampah/${getRandom('.gif')}`;
 				exec(`convert ${media} ${ran}`, (err) => {
 					fs.unlinkSync(media)
-					if (err) return m.reply('Gagal❗')
+					if (err) return m.reply('Failed❗')
 					let buffer = fs.readFileSync(ran)
 					m.reply({ video: buffer, gifPlayback: true })
 					fs.unlinkSync(ran)
@@ -1932,7 +1932,7 @@ break
 			}
 			break
 			case 'toimage': case 'toimg': {
-				if (!/webp|video/.test(mime)) return m.reply(`Reply Video/Stiker dengan caption *${prefix + command}*`)
+				if (!/webp|video/.test(mime)) return m.reply(`Reply Video/Stiker with caption *${prefix + command}*`)
 				m.reply(mess.wait)
 				let media = await naze.downloadAndSaveMediaMessage(qmsg)
 				let ran = `./database/sampah/${getRandom('.png')}`;
@@ -1946,12 +1946,12 @@ break
 			}
 			break
 			case 'toptv': {
-				if (!/video/.test(mime)) return m.reply(`Kirim/Reply Video Yang Ingin Dijadikan PTV Message Dengan Caption ${prefix + command}`)
+				if (!/video/.test(mime)) return m.reply(`Send/Reply Video you want to make into PTV message with a Caption ${prefix + command}`)
 				if ((m.quoted ? m.quoted.type : m.type) === 'videoMessage') {
 					const anu = await quoted.download()
 					const message = await generateWAMessageContent({ video: anu }, { upload: naze.waUploadToServer })
 					await naze.relayMessage(m.chat, { ptvMessage: message.videoMessage }, {})
-				} else m.reply('Reply Video Yang Mau Di Ubah Ke PTV Message!')
+				} else m.reply('Reply Video you want to comvert to a PTV to a Message!')
 			}
 			break
 			case 'tourl': {
