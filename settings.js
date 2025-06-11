@@ -29,7 +29,7 @@ global.fake = {
 }
 
 global.my = {
-	yt: 'https://youtube.com/c/Nazedev',
+	yt: 'https://youtube.com/c/KINGVON MD preview',
 	gh: 'https://github.com/SilverTosh',
 	gc: 'https://chat.whatsapp.com/H54F9iyK1xL78AzsI4JJJc',
 	ch: '120363382959814921@newsletter',
