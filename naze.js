@@ -3812,6 +3812,7 @@ break
                     }));
                     await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
                 }
+	      }
             }
             break
 				case 'play': {
