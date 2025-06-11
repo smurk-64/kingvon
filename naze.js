@@ -3590,7 +3590,7 @@ break
 						for (let url of boardUrls) {
 							try {
 								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸${command.toUpperCase()} GAME\n\nGiliran: @${m.sender.split('@')[0]}\n\nReply Tap this message to continue playing!\nExample: from to -> b1 c3`, mentions: [m.sender] });
+								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸${command.toUpperCase()} GAME\n\nYour turn: @${m.sender.split('@')[0]}\n\nReply Tap this message to continue playing!\nExample: from to -> b1 c3`, mentions: [m.sender] });
 								chess[m.chat].start = true
 								chess[m.chat].turn = m.sender
 								chess[m.chat].id = key.id;
@@ -3649,7 +3649,7 @@ break
 						for (let url of boardUrls) {
 							try {
 								const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-								let { key } = await m.reply({ image: data, caption: `â™Ÿï¸CHESS GAME\n\nGiliran: @${chess[m.sender].turn.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
+								let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME by KINGVON MD\n\nYour turn: @${chess[m.sender].turn.split('@')[0]}\n\nReply Pesan to this message to continue!\nExample: from to -> b1 c3`, mentions: [chess[m.sender].turn] });
 								chess[m.sender].id = key.id;
 								break;
 							} catch (e) {}
