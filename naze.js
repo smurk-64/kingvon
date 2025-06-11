@@ -594,7 +594,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				for (let url of boardUrls) {
 					try {
 						const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-						let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME (vs BOT)\n\nLangkahmu: ${from} → ${to}\nLangkah bot: ${botMove.from} → ${botMove.to}\n\nGiliranmu berikutnya!\nExample: e2 e4`, mentions: [m.sender] });
+						let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME (YOU vs KINGVON BOT)\n\nYour move: ${from} → ${to}\nBOT'S move: ${botMove.from} → ${botMove.to}\n\nYour next turn!\nExample: e2 e4`, mentions: [m.sender] });
 						game.id = key.id;
 						break;
 					} catch (e) {}
