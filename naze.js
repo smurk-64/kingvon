@@ -984,19 +984,19 @@ break
 			break
 			case 'addpr': case 'addprem': case 'addpremium': {
 				if (!isCreator) return m.reply(mess.owner)
-				if (!text) return m.reply(`Example:\n${prefix + command} @tag|waktu\n${prefix + command} @${m.sender.split('@')[0]}|30 hari`)
+				if (!text) return m.reply(`Example:\n${prefix + command} @tag|time\n${prefix + command} @${m.sender.split('@')[0]}|30 day`)
 				let [teks1, teks2] = text.split('|').map(x => x.trim());
 				const nmrnya = teks1.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
 				const onWa = await naze.onWhatsApp(nmrnya)
-				if (!onWa.length > 0) return m.reply('Nomer Tersebut Tidak Terdaftar Di Whatsapp!')
+				if (!onWa.length > 0) return m.reply('The number is not registered on Whatsapp!')
 				if (teks2) {
 					if (db.users[nmrnya] && db.users[nmrnya].limit >= 0) {
 						addExpired({ id: nmrnya, expired: teks2.replace(/[^0-9]/g, '') + 'd' }, premium);
 						m.reply(`Sukses ${command} @${nmrnya.split('@')[0]} Selama ${teks2}`)
 						db.users[nmrnya].limit += db.users[nmrnya].vip ? limit.vip : limit.premium
 						db.users[nmrnya].money += db.users[nmrnya].vip ? money.vip : money.premium
-					} else m.reply('Nomer tidak terdaftar di BOT !\nPastikan Nomer Pernah Menggunakan BOT!')
-				} else m.reply(`Masukkan waktunya!\Example:\n${prefix + command} @tag|waktu\n${prefix + command} @${m.sender.split('@')[0]}|30d\n_d = day_`)
+					} else m.reply('The number is not registered to KINGVON BOT !\nMake sure it has used the BOT before!')
+				} else m.reply(`please enter the time!\Example:\n${prefix + command} @tag|time\n${prefix + command} @${m.sender.split('@')[0]}|30d\n_d = day_`)
 			}
 			break
 			case 'delpr': case 'delprem': case 'delpremium': {
@@ -1009,15 +1009,15 @@ break
 						m.reply(`Sukses ${command} @${nmrnya.split('@')[0]}`)
 						db.users[nmrnya].limit += db.users[nmrnya].vip ? limit.vip : limit.free
 						db.users[nmrnya].money += db.users[nmrnya].vip ? money.vip : money.free
-					} else m.reply(`User @${nmrnya.split('@')[0]} Bukan Premium❗`)
-				} else m.reply('Nomer tidak terdaftar di BOT !')
+					} else m.reply(`User @${nmrnya.split('@')[0]} Not Premium❗`)
+				} else m.reply('Number is not registered to KINGVON BOT !')
 			}
 			break
 			case 'listpr': case 'listprem': case 'listpremium': {
 				if (!isCreator) return m.reply(mess.owner)
 				let txt = `*------「 LIST PREMIUM 」------*\n\n`
 				for (let userprem of premium) {
-					txt += `➸ *Nomer*: @${userprem.id.split('@')[0]}\n➸ *Limit*: ${db.users[userprem.id].limit}\n➸ *Money*: ${db.users[userprem.id].money.toLocaleString('id-ID')}\n➸ *Expired*: ${formatDate(userprem.expired)}\n\n`
+					txt += `➸ *Number*: @${userprem.id.split('@')[0]}\n➸ *Limit*: ${db.users[userprem.id].limit}\n➸ *Money*: ${db.users[userprem.id].money.toLocaleString('id-ID')}\n➸ *Expired*: ${formatDate(userprem.expired)}\n\n`
 				}
 				m.reply(txt)
 			}
@@ -1052,7 +1052,7 @@ break
 						m.react('✅')
 					} else m.reply('Only Support video/audio/image/text')
 				} catch (e) {
-					m.reply('Gagal Mengupload Status Whatsapp!')
+					m.reply('KINGVON MD Failed to upload  Whatsapp status!')
 				}
 			}
 			break
