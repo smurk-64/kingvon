@@ -3908,70 +3908,70 @@ break
 │${setv} ${prefix}speed
 │${setv} ${prefix}ping
 │${setv} ${prefix}afk
-│${setv} ${prefix}vv (reply to view once message)
+│${setv} ${prefix}vv 
 │${setv} ${prefix}inspect (group url)
 │${setv} ${prefix}addmsg
 │${setv} ${prefix}delmsg
 │${setv} ${prefix}getmsg
 │${setv} ${prefix}listmsg
 │${setv} ${prefix}q (reply to message)
-│${setv} ${prefix}menfes (254720xxx|fake name)
-│${setv} ${prefix}confes (254720xxx|fake name)
+│${setv} ${prefix}menfes (254xx|fake name)
+│${setv} ${prefix}confes (254xx|fake name)
 │${setv} ${prefix}roman
-│${setv} ${prefix}jadibot 💎
+│${setv} ${prefix}vonbot 💎
 │${setv} ${prefix}stopvonbot
 │${setv} ${prefix}listvonbot
 │${setv} ${prefix}donate
-│${setv} ${prefix}addsewa
+│${setv} ${prefix}addservice
 │${setv} ${prefix}delservice
 │${setv} ${prefix}listservice
 ╰─┬────❍
 ╭─┴❍「 *GROUP COMMANDS* 」❍
-│${setv} ${prefix}add (254xxx)
-│${setv} ${prefix}kick (@tag/254xxx)
-│${setv} ${prefix}promote (@tag/254xxx)
-│${setv} ${prefix}demote (@tag/62xxx)
-│${setv} ${prefix}warn (@tag/254xxx)
-│${setv} ${prefix}unwarn (@tag/254xxx)
-│${setv} ${prefix}setname (new group name)
-│${setv} ${prefix}setdesc (description)
-│${setv} ${prefix}setppgc (reply to image)
-│${setv} ${prefix}delete (reply to message)
+│${setv} ${prefix}add 
+│${setv} ${prefix}kick 
+│${setv} ${prefix}promote
+│${setv} ${prefix}demote 
+│${setv} ${prefix}warn 
+│${setv} ${prefix}unwarn 
+│${setv} ${prefix}setname 
+│${setv} ${prefix}setdesc
+│${setv} ${prefix}setppgc 
+│${setv} ${prefix}delete 
 │${setv} ${prefix}linkgroup
 │${setv} ${prefix}revoke
 │${setv} ${prefix}tagall
 │${setv} ${prefix}pin
 │${setv} ${prefix}unpin
 │${setv} ${prefix}hidetag
-│${setv} ${prefix}totag (reply to message)
+│${setv} ${prefix}totag 
 │${setv} ${prefix}listonline
 │${setv} ${prefix}group set
 │${setv} ${prefix}group (admin only)
 ╰─┬────❍
 ╭─┴❍「 *SEARCH TOOLS* 」❍
-│${setv} ${prefix}ytsearch (query)
-│${setv} ${prefix}spotify (query)
-│${setv} ${prefix}pixiv (query)
-│${setv} ${prefix}pinterest (query)
-│${setv} ${prefix}wallpaper (query)
-│${setv} ${prefix}ringtone (query)
-│${setv} ${prefix}google (query)
-│${setv} ${prefix}gimage (query)
-│${setv} ${prefix}npm (query)
-│${setv} ${prefix}style (query)
-│${setv} ${prefix}weather (city)
-│${setv} ${prefix}tenor (query)
-│${setv} ${prefix}urban (query)
+│${setv} ${prefix}ytsearch 
+│${setv} ${prefix}spotify
+│${setv} ${prefix}pixiv 
+│${setv} ${prefix}pinterest 
+│${setv} ${prefix}wallpaper 
+│${setv} ${prefix}ringtone 
+│${setv} ${prefix}google 
+│${setv} ${prefix}gimage 
+│${setv} ${prefix}npm 
+│${setv} ${prefix}style
+│${setv} ${prefix}weather 
+│${setv} ${prefix}tenor 
+│${setv} ${prefix}urban 
 ╰─┬────❍
 ╭─┴❍「 *DOWNLOADER* 」❍
-│${setv} ${prefix}ytmp3 (url)
-│${setv} ${prefix}ytmp4 (url)
-│${setv} ${prefix}instagram (url)
-│${setv} ${prefix}tiktok (url)
-│${setv} ${prefix}tiktokmp3 (url)
-│${setv} ${prefix}facebook (url)
-│${setv} ${prefix}spotifydl (url)
-│${setv} ${prefix}mediafire (url)
+│${setv} ${prefix}ytmp3
+│${setv} ${prefix}ytmp4 
+│${setv} ${prefix}instagram 
+│${setv} ${prefix}tiktok 
+│${setv} ${prefix}tiktokmp3 
+│${setv} ${prefix}facebook 
+│${setv} ${prefix}spotifydl
+│${setv} ${prefix}mediafire
 ╰─┬────❍
 ╭─┴❍「 *QUOTES & WISDOM* 」❍
 │${setv} ${prefix}motivate
@@ -3985,18 +3985,18 @@ break
 ╭─┴❍「 *UTILITIES* 」❍
 │${setv} ${prefix}get (url) 💎
 │${setv} ${prefix}hd (reply to image)
-│${setv} ${prefix}toaudio (reply to video)
-│${setv} ${prefix}tomp3 (reply to video)
-│${setv} ${prefix}tovn (reply to audio)
-│${setv} ${prefix}toimage (reply to sticker/video)
-│${setv} ${prefix}toptv (reply to sticker)
-│${setv} ${prefix}tourl (reply to media)
+│${setv} ${prefix}toaudio 
+│${setv} ${prefix}tomp3 
+│${setv} ${prefix}tovn 
+│${setv} ${prefix}toimage 
+│${setv} ${prefix}toptv
+│${setv} ${prefix}tourl 
 │${setv} ${prefix}tts (text)
 │${setv} ${prefix}toqr (text)
 │${setv} ${prefix}brat (text)
 │${setv} ${prefix}bratvid (text)
 │${setv} ${prefix}ssweb (url) 💎
-│${setv} ${prefix}sticker (send/reply to image)
+│${setv} ${prefix}sticker 
 │${setv} ${prefix}steal (reply to sticker)
 │${setv} ${prefix}smeme (send/reply to image)
 │${setv} ${prefix}dehaze (send/reply to image)
@@ -4007,23 +4007,23 @@ break
 │${setv} ${prefix}readmore text1|text2
 │${setv} ${prefix}qc (message)
 │${setv} ${prefix}translate
-│${setv} ${prefix}wasted (send/reply to image)
-│${setv} ${prefix}triggered (send/reply to image)
+│${setv} ${prefix}wasted 
+│${setv} ${prefix}triggered 
 │${setv} ${prefix}shorturl (url)
 │${setv} ${prefix}gitclone (url)
-│${setv} ${prefix}fat (reply to audio)
-│${setv} ${prefix}fast (reply to audio)
-│${setv} ${prefix}bass (reply to audio)
-│${setv} ${prefix}slow (reply to audio)
-│${setv} ${prefix}chipmunk (reply to audio)
-│${setv} ${prefix}deep (reply to audio)
-│${setv} ${prefix}robot (reply to audio)
-│${setv} ${prefix}blown (reply to audio)
-│${setv} ${prefix}reverse (reply to audio)
-│${setv} ${prefix}smooth (reply to audio)
-│${setv} ${prefix}earrape (reply to audio)
-│${setv} ${prefix}nightcore (reply to audio)
-│${setv} ${prefix}getexif (reply to sticker)
+│${setv} ${prefix}fat 
+│${setv} ${prefix}fast 
+│${setv} ${prefix}bass
+│${setv} ${prefix}slow
+│${setv} ${prefix}chipmunk 
+│${setv} ${prefix}deep 
+│${setv} ${prefix}robot 
+│${setv} ${prefix}blown 
+│${setv} ${prefix}reverse
+│${setv} ${prefix}smooth 
+│${setv} ${prefix}earrape
+│${setv} ${prefix}nightcore 
+│${setv} ${prefix}getexif 
 ╰─┬────❍
 ╭─┴❍「 *AI POWERED* 」❍
 │${setv} ${prefix}ai (query)
