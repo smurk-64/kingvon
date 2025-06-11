@@ -565,19 +565,19 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				if (game.isCheckmate() || game.isDraw() || game.isGameOver()) {
 					const status = game.isCheckmate() ? 'Checkmate' : game.isDraw() ? 'Draw' : 'Game Over';
 					delete chess[m.sender];
-					return m.reply(`♟Game ${status}\nPermainan dihentikan`);
+					return m.reply(`♟Game ${status}\nGame has been stopped`);
 				}
 				const [from, to] = budy.toLowerCase().split(' ');
-				if (!from || !to || from.length !== 2 || to.length !== 2) return m.reply('Format salah! Gunakan: e2 e4');
+				if (!from || !to || from.length !== 2 || to.length !== 2) return m.reply('Invalid format! Use: e2 e4');
 				try {
 					game.move({ from, to });
 				} catch (e) {
-					return m.reply('Langkah Tidak Valid!')
+					return m.reply('Invalid move!')
 				}
 				
 				if (game.isGameOver()) {
 					delete chess[m.sender];
-					return m.reply(`♟Permainan Selesai\nPemenang: @${m.sender.split('@')[0]}`);
+					return m.reply(`♟Game over\nWinner: @${m.sender.split('@')[0]}`);
 				}
 				const moves = game.moves({ verbose: true });
 				const botMove = moves[Math.floor(Math.random() * moves.length)];
@@ -587,7 +587,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				
 				if (game.isGameOver()) {
 					delete chess[m.sender];
-					return m.reply(`♟Permainan Selesai\nPemenang: BOT`);
+					return m.reply(`♟Game over\nWinner: KINGVON`);
 				}
 				const encodedFen = encodeURI(game._fen);
 				const boardUrls = [`https://www.chess.com/dynboard?fen=${encodedFen}&size=3&coordinates=inside`,`https://www.chess.com/dynboard?fen=${encodedFen}&board=graffiti&piece=graffiti&size=3&coordinates=inside`,`https://chessboardimage.com/${encodedFen}.png`,`https://backscattering.de/web-boardimage/board.png?fen=${encodedFen}&coordinates=true&size=765`,`https://fen2image.chessvision.ai/${encodedFen}/`];
@@ -601,7 +601,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				}
 			} else if (game.time && (Date.now() - game.time >= 3600000)) {
 				delete chess[m.sender];
-				return m.reply(`♟Waktu Habis!\nPermainan dihentikan`);
+				return m.reply(`♟ Time's up!\nKINGVON ended the game`);
 			}
 		}
 		if (m.isGroup && (!isCmd || isCreator) && (m.chat in chess)) {
@@ -612,15 +612,15 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				if (chess[m.chat].isCheckmate() || chess[m.chat].isDraw() || chess[m.chat].isGameOver()) {
 					const status = chess[m.chat].isCheckmate() ? 'Checkmate' : chess[m.chat].isDraw() ? 'Draw' : 'Game Over';
 					delete chess[m.chat];
-					return m.reply(`♟Game ${status}\nPermainan dihentikan`);
+					return m.reply(`♟Game ${status}\ngame has been stopped`);
 				}
 				const [from, to] = budy.toLowerCase().split(' ');
-				if (!from || !to || from.length !== 2 || to.length !== 2) return m.reply('Format salah! Gunakan format seperti: e2 e4');
+				if (!from || !to || from.length !== 2 || to.length !== 2) return m.reply('Wrong format! Please use the format like: e2 e4');
 				if ([chess[m.chat].player1, chess[m.chat].player2].includes(m.sender) && chess[m.chat].turn === m.sender) {
 					try {
 						chess[m.chat].move({ from, to });
 					} catch (e) {
-						return m.reply('Langkah Tidak Valid!')
+						return m.reply('Invalid Move!!')
 					}
 					chess[m.chat].time = Date.now();
 					chess[m.chat]._fen = chess[m.chat].fen();
@@ -631,7 +631,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 					for (let url of boardUrls) {
 						try {
 							const { data } = await axios.get(url, { responseType: 'arraybuffer' });
-							let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\nGiliran: @${nextPlayer.split('@')[0]}\n\nReply Pesan Ini untuk lanjut bermain!\nExample: from to -> b1 c3`, mentions: [nextPlayer] });
+							let { key } = await m.reply({ image: data, caption: `♟️CHESS GAME\n\ntTurn: @${nextPlayer.split('@')[0]}\n\nReply to this message to continue playing!\nExample: from to -> b1 c3`, mentions: [nextPlayer] });
 							chess[m.chat].turn = nextPlayer
 							chess[m.chat].id = key.id;
 							break;
@@ -640,7 +640,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 				}
 			} else if (chess[m.chat].time && (Date.now() - chess[m.chat].time >= 3600000)) {
 				delete chess[m.chat]
-				return m.reply(`♟Waktu Habis!\nPermainan dihentikan`)
+				return m.reply(`♟Time's up!\nKINGVON stopped the game`)
 			}
 		}
 		
