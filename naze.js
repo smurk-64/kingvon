@@ -3676,7 +3676,145 @@ default:
     }
 }
 break
-					case 'play': {
+			case 'blackjack': case 'bj': {
+    let session = null;
+    for (let id in blackjack) {
+        if (blackjack[id].players.find(p => p.id === m.sender)) {
+            session = blackjack[id];
+            break;
+        }
+    }
+
+    if (session && !(session instanceof Blackjack)) {
+        session = Object.assign(new Blackjack(session), session)
+    }
+
+    if (blackjack[m.chat] && !(blackjack[m.chat] instanceof Blackjack)) {
+        blackjack[m.chat] = Object.assign(new Blackjack(blackjack[m.chat]), blackjack[m.chat])
+    }
+
+    switch (args[0]) {
+        case 'create': case 'join':
+            if (!m.isGroup) return m.reply(mess.group)
+
+            if (blackjack[m.chat] || session) {
+                if (blackjack[m.chat]?.players?.some(a => a.id === m.sender)) return m.reply('Kamu Sudah Bergabung!')
+                if (session) return m.reply('Kamu sudah bergabung di sesi Grup lain! Keluar dulu sebelum bergabung di sesi baru.');
+                if (blackjack[m.chat].players.length > 10) return m.reply(`Jumlah Pemain Sudah Maksimal\nSilahkan Memulai Permainan\n${prefix + command} start`);
+
+                blackjack[m.chat].players.push({ id: m.sender, cards: [] });
+                m.reply('Sukses Join Game Blackjack')
+            } else {
+                blackjack[m.chat] = new Blackjack({ id: m.chat, host: m.sender });
+                blackjack[m.chat].players.push({ id: m.sender, cards: [] });
+                m.reply('Sukses Create Game Blackjack')
+            }
+            break
+
+        case 'start':
+            if (!m.isGroup) return m.reply(mess.group)
+            if (!blackjack[m.chat]) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
+            if (blackjack[m.chat]?.host !== m.sender) return m.reply(`Hanya Pembuat Room @${blackjack[m.chat].host.split('@')[0]} yang bisa Memulai Sessi!`)
+            if (blackjack[m.chat].players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
+            if (blackjack[m.chat].started) return m.reply('Game Sudah Dimulai Sejak Awal!')
+
+            blackjack[m.chat].distributeCards();
+            m.reply(`🃏GAME BLACKJACK♦️\nStart Card: ${blackjack[m.chat].startCard.rank + blackjack[m.chat].startCard.suit}\nDeck Count: ${blackjack[m.chat].deck.length}\n${blackjack[m.chat].players.map(a => `- @${a.id.split('@')[0]} : (${a.cards.length} kartu)`).join('\n')}\n\nCek Private Chat\nwa.me/${botNumber.split('@')[0]}`);
+
+            for (let p of blackjack[m.chat].players) {
+                const startCard = blackjack[m.chat].startCard;
+                let buttons = p.cards.map(a => ({
+                    name: 'quick_reply',
+                    buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })
+                }));
+                if (!blackjack[m.chat].hasMatching(p.id)) buttons.push({
+                    name: 'quick_reply',
+                    buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` })
+                });
+                await naze.sendListMsg(p.id, { text: `Start Card: ${startCard.rank + startCard.suit}`, footer: `${p.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
+            }
+            break
+
+        case 'hit': case 'minum': {
+            if (!session) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
+            if (!session.started) return m.reply('Game Belum Di Mulai!')
+            if (session.players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
+            if (!session.players?.some(a => a.id === m.sender)) return m.reply('Kamu belum bergabung!');
+            if (!args[0]) return m.reply(`Gunakan format:\n${prefix + command} play <kartu>\nContoh: ${prefix + command} hit`);
+
+            const player = session.players.find(p => p.id === m.sender);
+            const hitIndex = player.cards.findIndex(c => (c.rank + c.suit) === (session.startCard.rank + session.startCard.suit));
+
+            if (session.submitCard.some(s => s.id === m.sender) || session.skip.includes(m.sender)) {
+                return m.reply('Kamu sudah bermain di ronde ini!');
+            }
+
+            if (!session.hasMatching(m.sender)) {
+                if (session.deck.length) {
+                    const newCard = session.deck.shift();
+                    player.cards.push(newCard);
+                    await sleep(1000);
+
+                    let buttons = player.cards.map(a => ({
+                        name: 'quick_reply',
+                        buttonParamsJson: JSON.stringify({ display_text: `${a.rank}${a.suit}`, id: `.${command} play ${a.rank}${a.suit}` })
+                    }));
+
+                    if (!session.hasMatching(player.id)) buttons.push({
+                        name: 'quick_reply',
+                        buttonParamsJson: JSON.stringify({ display_text: 'Minum', id: `.${command} minum` })
+                    });
+
+                    await naze.sendListMsg(player.id, { text: `Start Card: ${session.startCard.rank + session.startCard.suit}`, footer: `${player.cards.map(c => c.rank + c.suit).join(', ')}`, buttons }, { quoted: m });
+                } else {
+                    let reuse = session.reuseSubmitCardsForDrinking()
+                    await m.reply(reuse.msg)
+
+                    if (!session.skip.find(a => a.id === player.id)) session.skip.push({ id: player.id });
+                    await m.reply('Deck sudah habis, kamu tidak bisa mengambil kartu. Dilewati.');
+                    await naze.sendText(session.id, `@${m.sender.split('@')[0]} dilewati karena deck habis.`, m);
+
+                    if ((session.submitCard.length + session.skip.length) === session.players.length) {
+                        const result = session.resolveRound();
+                        if (result) {
+                            await naze.sendText(session.id, result, m);
+                            if (session.players.length === 1) {
+                                await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
+                                delete blackjack[session.id];
+                                return;
+                            }
+                            const leaderCards = session.players.find(a => a.id === session.leader);
+                            let buttons = leaderCards.cards.map(c => ({
+                                name: 'quick_reply',
+                                buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })
+                            }));
+                            await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
+                        }
+                    }
+                }
+            } else {
+                m.reply(`Kamu masih punya kartu dengan suit ${session.startCard.suit}, mainkan dulu sebelum minum!`);
+            }
+
+            if ((session.submitCard.length + session.skip.length) === session.players.length) {
+                const result = session.resolveRound();
+                if (result) {
+                    await naze.sendText(session.id, result, m);
+                    if (session.players.length === 1) {
+                        await naze.sendText(session.id, `Pemain Tersisa 1 (@${session.players[0].id.split('@')[0]}), sesi Blackjack selesai.`, m);
+                        delete blackjack[session.id];
+                        return;
+                    }
+                    const leaderCards = session.players.find(a => a.id === session.leader);
+                    let buttons = leaderCards.cards.map(c => ({
+                        name: 'quick_reply',
+                        buttonParamsJson: JSON.stringify({ display_text: `${c.rank}${c.suit}`, id: `.${command} play ${c.rank}${c.suit}` })
+                    }));
+                    await naze.sendListMsg(session.leader, { text: 'Pilih kartu untuk memulai ronde baru', footer: leaderCards.cards.map(c => c.rank + c.suit).join(', '), buttons }, { quoted: m });
+                }
+            }
+            break
+				case 'play': {
 						if (!session) return m.reply('Tidak Ada Sesi Game Blackjack yang Sedang Berjalan!')
 						if (!session.started) return m.reply('Game Belum Di Mulai!')
 						if (session.players.length < 2) return m.reply('Minimal 2 Pemain Untuk Memulai Permainan!');
