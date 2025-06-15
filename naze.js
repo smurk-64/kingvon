@@ -167,7 +167,7 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 						await naze.sendMessage(o, { document: fs.readFileSync(datanya), mimetype: 'application/json', fileName: tglnya + '_database.json' })
 						console.log(`[AUTO BACKUP] Backup berhasil dikirim ke ${o}`);
 					} catch (e) {
-						console.error(`[AUTO BACKUP] Gagal mengirim backup ke ${o}:`, error);
+						console.error(`[AUTO BACKUP] Gagal mengirim backup ke ${o}:`, e);
 					}
 				}
 			}
