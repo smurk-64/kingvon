@@ -148,38 +148,38 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 		
 		// Reset Limit
 		cron.schedule('00 00 * * *', async () => {
-			cmdDel(db.hit);
-			console.log('Reseted Limit Users')
-			let user = Object.keys(db.users)
-			for (let jid of user) {
-				const limitUser = db.users[jid].vip ? limit.vip : checkStatus(jid, premium) ? limit.premium : limit.free
-				if (db.users[jid].limit < limitUser) db.users[jid].limit = limitUser
-			}
-			if (set?.autobackup) {
-				let datanya = './database/' + tempatDB;
-				if (tempatDB.startsWith('mongodb')) {
-					datanya = './database/backup_database.json';
-					fs.writeFileSync(datanya, JSON.stringify(global.db, null, 2), 'utf-8');
-				}
-				let tglnya = new Date().toISOString().replace(/[:.]/g, '-');
-				for (let o of owner) {
-					try {
-						await naze.sendMessage(o, { document: fs.readFileSync(datanya), mimetype: 'application/json', fileName: tglnya + '_database.json' })
-						console.log(`[AUTO BACKUP] Backup berhasil dikirim ke ${o}`);
-					} catch (e) {
-						console.error(`[AUTO BACKUP] Gagal mengirim backup ke ${o}:`, error);
-					}
-				}
-			}
-		}, {
-			scheduled: true,
-			timezone: 'Asia/Jakarta'
-		});
+    cmdDel(db.hit);
+    console.log('Reset Limit Users');
+    let user = Object.keys(db.users);
+    for (let jid of user) {
+        const limitUser  = db.users[jid].vip ? limit.vip : checkStatus(jid, premium) ? limit.premium : limit.free;
+        if (db.users[jid].limit < limitUser ) db.users[jid].limit = limitUser ;
+    }
+    if (set?.autobackup) {
+        let datanya = './database/' + tempatDB;
+        if (tempatDB.startsWith('mongodb')) {
+            datanya = './database/backup_database.json';
+            fs.writeFileSync(datanya, JSON.stringify(global.db, null, 2), 'utf-8');
+        }
+        let tglnya = new Date().toISOString().replace(/[:.]/g, '-');
+        for (let o of owner) {
+            try {
+                await naze.sendMessage(o, { document: fs.readFileSync(datanya), mimetype: 'application/json', fileName: tglnya + '_database.json' });
+                console.log(`[AUTO BACKUP] Backup successfully sent to ${o}`);
+            } catch (e) {
+                console.error(`[AUTO BACKUP] Failed to send backup to ${o}:`, error);
+            }
+        }
+    }
+}, {
+    scheduled: true,
+    timezone: 'Asia/Jakarta'
+});
 		
 		// Auto Set Bio
 		if (set.autobio) {
 			if (new Date() * 1 - set.status > 60000) {
-				await naze.updateProfileStatus(`${naze.user.name} | 🎯 Runtime : ${runtime(process.uptime())}`).catch(e => {})
+				await naze.updateProfileStatus(`${naze.user.name} | 🎯KINGVON MD Runtime : ${runtime(process.uptime())}`).catch(e => {})
 				set.status = new Date() * 1
 			}
 		}
@@ -204,33 +204,34 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 			
 			// Anti Hidetag
 			if (!m.key.fromMe && m.mentionedJid?.length === m.metadata.participanis?.length && db.groups[m.chat].antihidetag && !isCreator && m.isBotAdmin && !m.isAdmin) {
-				await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }})
-				await m.reply('*Anti Hidetag Sedang Aktif❗*')
+    await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }});
+    await m.reply('*Anti Hidetag is Currently Active❗*');
 			}
+			
 			
 			// Anti Tag Sw
 			if (!m.key.fromMe && db.groups[m.chat].antitagsw && !isCreator && m.isBotAdmin && !m.isAdmin) {
-				if (m.type === 'groupStatusMentionMessage' || m.message?.groupStatusMentionMessage || m.message?.protocolMessage?.type === 25 || Object.keys(m.message).length === 1 && Object.keys(m.message)[0] === 'messageContextInfo') {
-					if (!db.groups[m.chat].tagsw[m.sender]) {
-						db.groups[m.chat].tagsw[m.sender] = 1
-						await m.reply(`Grup ini terdeteksi ditandai dalam Status WhatsApp\n@${m.sender.split('@')[0]}, mohon untuk tidak menandai grup dalam status WhatsApp\nPeringatan ${db.groups[m.chat].tagsw[m.sender]}/5, akan dikick sewaktu waktu❗`)
-					} else if (db.groups[m.chat].tagsw[m.sender] >= 5) {
-						await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch((err) => m.reply('Failed!'))
-						await m.reply(`@${m.sender.split("@")[0]} telah dikeluarkan dari grup\nKarena menandai grup dalam status WhatsApp sebanyak 5x`)
-						delete db.groups[m.chat].tagsw[m.sender]
-					} else {
-						db.groups[m.chat].tagsw[m.sender] += 1
-						await m.reply(`Grup ini terdeteksi ditandai dalam Status WhatsApp\n@${m.sender.split('@')[0]}, mohon untuk tidak menandai grup dalam status WhatsApp\nPeringatan ${db.groups[m.chat].tagsw[m.sender]}/5, akan dikick sewaktu waktu❗`)
-					}
-				}
+    if (m.type === 'groupStatusMentionMessage' || m.message?.groupStatusMentionMessage || m.message?.protocolMessage?.type === 25 || Object.keys(m.message).length === 1 && Object.keys(m.message)[0] === 'messageContextInfo') {
+        if (!db.groups[m.chat].tagsw[m.sender]) {
+            db.groups[m.chat].tagsw[m.sender] = 1;
+            await m.reply(`This group has been detected as tagged in WhatsApp Status\n@${m.sender.split('@')[0]}, please do not tag the group in WhatsApp status\nWarning ${db.groups[m.chat].tagsw[m.sender]}/5, will be kicked at any time❗`);
+        } else if (db.groups[m.chat].tagsw[m.sender] >= 5) {
+            await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch((err) => m.reply('Failed!'));
+            await m.reply(`@${m.sender.split("@")[0]} has been removed from the group\nBecause they tagged the group in WhatsApp status 5 times`);
+            delete db.groups[m.chat].tagsw[m.sender];
+        } else {
+            db.groups[m.chat].tagsw[m.sender] += 1;
+            await m.reply(`This group has been detected as tagged in WhatsApp Status\n@${m.sender.split('@')[0]}, please do not tag the group in WhatsApp status\nWarning ${db.groups[m.chat].tagsw[m.sender]}/5, will be kicked at any time❗`);
+        }
+    }
 			}
 			
 			// Anti Toxic
 			if (!m.key.fromMe && db.groups[m.chat].antitoxic && !isCreator && m.isBotAdmin && !m.isAdmin) {
-				if (budy.toLowerCase().split(/\s+/).some(word => badWords.includes(word))) {
-					await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }})
-					await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Terdeteksi @${m.sender.split('@')[0]} Berkata Toxic\nMohon gunakan bahasa yang sopan.`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Toxic❗*'}, ...m.key }}}, {})
-				}
+    if (budy.toLowerCase().split(/\s+/).some(word => badWords.includes(word))) {
+        await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }});
+        await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Detected @${m.sender.split('@')[0]} Said Toxic\nPlease use polite language.`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Toxic❗*'}, ...m.key }}}, {});
+    }
 			}
 			
 			// Anti Delete
@@ -247,34 +248,32 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 			
 			// Anti Link Group
 			if (db.groups[m.chat].antilink && !isCreator && m.isBotAdmin && !m.isAdmin) {
-				if (budy.match('chat.whatsapp.com/')) {
-					await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }})
-					await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Terdeteksi @${m.sender.split('@')[0]} Mengirim Link Group\nMaaf Link Harus Di Hapus..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Link❗*'}, ...m.key }}}, {})
-				}
+    if (budy.match('chat.whatsapp.com/')) {
+        await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }});
+        await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Detected @${m.sender.split('@')[0]} Sending Group Link\nSorry, the link must be removed..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Link❗*'}, ...m.key }}}, {});
+    }
 			}
 			
 			// Anti Virtex Group
 			if (db.groups[m.chat].antivirtex && !isCreator && m.isBotAdmin && !m.isAdmin) {
-				if (budy.length > 4000) {
-					await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }})
-					await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Terdeteksi @${m.sender.split('@')[0]} Mengirim Virtex..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Virtex❗*'}, ...m.key }}}, {})
-					await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-				}
-				if (m.msg?.nativeFlowMessage?.messageParamsJson?.length > 3500) {
-					await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }})
-					await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Terdeteksi @${m.sender.split('@')[0]} Mengirim Bug..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Bug❗*'}, ...m.key }}}, {})
-					await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-				}
+    if (budy.length > 4000) {
+        await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }});
+        await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Detected @${m.sender.split('@')[0]} Sending Virtex..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Virtex❗*'}, ...m.key }}}, {});
+        await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+    }
+    if (m.msg?.nativeFlowMessage?.messageParamsJson?.length > 3500) {
+        await naze.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.id, participant: m.sender }});
+        await naze.relayMessage(m.chat, { extendedTextMessage: { text: `Detected @${m.sender.split('@')[0]} Sending Bug..`, contextInfo: { mentionedJid: [m.key.participant], isForwarded: true, forwardingScore: 1, quotedMessage: { conversation: '*Anti Bug❗*'}, ...m.key }}}, {});
+        await naze.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+    }
 			}
-			
-		}
 		
 		// Auto Read
 		if (m.message && m.key.remoteJid !== 'status@broadcast') {
-			if ((set.autoread && naze.public) || isCreator) {
-				naze.readMessages([m.key]);
-				console.log(chalk.black(chalk.bgWhite('[ PESAN ]:'), chalk.bgGreen(new Date), chalk.bgHex('#00EAD3')(budy || m.type), chalk.bgHex('#AF26EB')(m.key.id) + '\n' + chalk.bgCyanBright('[ DARI ] :'), chalk.bgYellow(m.pushName || (isCreator ? 'Bot' : 'Anonim')), chalk.bgHex('#FF449F')(m.sender), chalk.bgHex('#FF5700')(m.isGroup ? m.metadata.subject : m.chat.endsWith('@newsletter') ? 'Newsletter' : 'Private Chat'), chalk.bgBlue('(' + m.chat + ')')));
-			}
+    if ((set.autoread && naze.public) || isCreator) {
+        naze.readMessages([m.key]);
+        console.log(chalk.black(chalk.bgWhite('[ MESSAGE ]:'), chalk.bgGreen(new Date), chalk.bgHex('#00EAD3')(budy || m.type), chalk.bgHex('#AF26EB')(m.key.id) + '\n' + chalk.bgCyanBright('[ FROM ] :'), chalk.bgYellow(m.pushName || (isCreator ? 'Bot' : 'Anonymous')), chalk.bgHex('#FF449F')(m.sender), chalk.bgHex('#FF5700')(m.isGroup ? m.metadata.subject : m.chat.endsWith('@newsletter') ? 'Newsletter' : 'Private Chat'), chalk.bgBlue('(' + m.chat + ')')));
+    }
 		}
 		
 		// Filter Bot & Ban
@@ -283,21 +282,21 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 		
 		// Mengetik & Anti Spam & Hit
 		if (naze.public && isCmd) {
-			if (set.autotyping) {
-				await naze.sendPresenceUpdate('composing', m.chat)
-			}
-			if (cases.includes(command)) {
-				cmdAdd(db.hit);
-				cmdAddHit(db.hit, command);
-			}
-			if (set.antispam && antiSpam.isFiltered(m.sender)) {
-				console.log(chalk.bgRed('[ SPAM ] : '), chalk.black(chalk.bgHex('#1CFFF7')(`From -> ${m.sender}`), chalk.bgHex('#E015FF')(` In ${m.isGroup ? m.chat : 'Private Chat'}`)))
-				return m.reply('「 ❗ 」Beri Jeda 5 Detik Per Command Kak')
-			}
-		}
-		
-		if (isCmd && !isCreator) antiSpam.addFilter(m.sender)
-		
+    if (set.autotyping) {
+        await naze.sendPresenceUpdate('composing', m.chat);
+    }
+    if (cases.includes(command)) {
+        cmdAdd(db.hit);
+        cmdAddHit(db.hit, command);
+    }
+    if (set.antispam && antiSpam.isFiltered(m.sender)) {
+        console.log(chalk.bgRed('[ SPAM ] : '), chalk.black(chalk.bgHex('#1CFFF7')(`From -> ${m.sender}`), chalk.bgHex('#E015FF')(` In ${m.isGroup ? m.chat : 'Private Chat'}`)));
+        return m.reply('「 ❗ 」Please wait 5 seconds between commands.');
+    }
+}
+
+if (isCmd && !isCreator) antiSpam.addFilter(m.sender);
+			
 		// Salam
 		if (/^a(s|ss)alamu('|)alaikum(| )(wr|)( |)(wb|)$/.test(budy?.toLowerCase())) {
 			const jwb_salam = ['Wa\'alaikumusalam','Wa\'alaikumusalam wr wb','Wa\'alaikumusalam Warohmatulahi Wabarokatuh']
@@ -305,170 +304,230 @@ module.exports = naze = async (naze, m, msg, store, groupCache) => {
 		}
 		
 		// Waktu Sholat
-		const jadwalSholat = {
-			Subuh: '04:30',
-			Dzuhur: '12:06',
-			Ashar: '15:21',
-			Maghrib: '18:08',
-			Isya: '19:00'
-		}
-		if (!this.intervalSholat) this.intervalSholat = null;
-		if (!this.waktusholat) this.waktusholat = {};
-		if (this.intervalSholat) clearInterval(this.intervalSholat); 
-		setTimeout(() => {
-			this.intervalSholat = setInterval(async() => {
-				const sekarang = moment.tz('Asia/Jakarta');
-				const jamSholat = sekarang.format('HH:mm');
-				const hariIni = sekarang.format('YYYY-MM-DD');
-				const detik = sekarang.format('ss');
-				if (detik !== '00') return;
-				for (const [sholat, waktu] of Object.entries(jadwalSholat)) {
-					if (jamSholat === waktu && this.waktusholat[sholat] !== hariIni) {
-						this.waktusholat[sholat] = hariIni
-						for (const [idnya, settings] of Object.entries(db.groups)) {
-							if (settings.waktusholat) {
-								await naze.sendMessage(idnya, { text: `Waktu *${sholat}* telah tiba, ambilah air wudhu dan segeralah shalat🙂.\n\n*${waktu.slice(0, 5)}*\n_untuk wilayah Jakarta dan sekitarnya._` }, { ephemeralExpiration: m.expiration || store?.messages[idnya]?.array?.slice(-1)[0]?.metadata?.ephemeralDuration || 0 }).catch(e => {})
-							}
-						}
-					}
-				}
-			}, 60000)
-		}, time_end);
-		
+		const prayerSchedule = {
+    Fajr: '04:30',
+    Dhuhr: '12:06',
+    Asr: '15:21',
+    Maghrib: '18:08',
+    Isha: '19:00'
+};
+
+if (!this.prayerInterval) this.prayerInterval = null;
+if (!this.prayerTimes) this.prayerTimes = {};
+
+if (this.prayerInterval) clearInterval(this.prayerInterval); 
+
+setTimeout(() => {
+    this.prayerInterval = setInterval(async () => {
+        const now = moment.tz('Asia/Jakarta');
+        const prayerTime = now.format('HH:mm');
+        const today = now.format('YYYY-MM-DD');
+        const seconds = now.format('ss');
+
+        if (seconds !== '00') return;
+
+        for (const [prayer, time] of Object.entries(prayerSchedule)) {
+            if (prayerTime === time && this.prayerTimes[prayer] !== today) {
+                this.prayerTimes[prayer] = today;
+                for (const [groupId, settings] of Object.entries(db.groups)) {
+                    if (settings.prayerTime) {
+                        await naze.sendMessage(groupId, { 
+                            text: `The time for *${prayer}* has arrived, please perform ablution and pray promptly🙂.\n\n*${time.slice(0, 5)}*\n_for the Jakarta area and surroundings._` 
+                        }, { 
+                            ephemeralExpiration: m.expiration || store?.messages[groupId]?.array?.slice(-1)[0]?.metadata?.ephemeralDuration || 0 
+                        }).catch(e => {});
+                    }
+                }
+            }
+        }
+    }, 60000);
+}, time_end);
+			
 		// Cek Expired
 		checkExpired(premium);
 		checkExpired(sewa, naze);
 		
 		// TicTacToe
-		let room = Object.values(tictactoe).find(room => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING')
-		if (room) {
-			let now = Date.now();
-			if (now - (room.lastMove || now) > 5 * 60 * 1000) {
-				m.reply('Game Tic-Tac-Toe dibatalkan karena tidak ada aktivitas selama 5 menit.');
-				delete tictactoe[room.id];
-				return;
-			}
-			room.lastMove = now;
-			let ok, isWin = false, isTie = false, isSurrender = false;
-			if (!/^([1-9]|(me)?nyerah|surr?ender|off|skip)$/i.test(m.text)) return
-			isSurrender = !/^[1-9]$/.test(m.text)
-			if (m.sender !== room.game.currentTurn) {
-				if (!isSurrender) return true
-			}
-			if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
-				m.reply({'-3': 'Game telah berakhir','-2': 'Invalid','-1': 'Posisi Invalid',0: 'Posisi Invalid'}[ok])
-				return true
-			}
-			if (m.sender === room.game.winner) isWin = true
-			else if (room.game.board === 511) isTie = true
-			if (!(room.game instanceof TicTacToe)) {
-				room.game = Object.assign(new TicTacToe(room.game.playerX, room.game.playerO), room.game)
-			}
-			let arr = room.game.render().map(v => ({X: '❌',O: '⭕',1: '1️⃣',2: '2️⃣',3: '3️⃣',4: '4️⃣',5: '5️⃣',6: '6️⃣',7: '7️⃣',8: '8️⃣',9: '9️⃣'}[v]))
-			if (isSurrender) {
-				room.game._currentTurn = m.sender === room.game.playerX
-				isWin = true
-			}
-			let winner = isSurrender ? room.game.currentTurn : room.game.winner
-			if (isWin) {
-				db.users[m.sender].limit += 3
-				db.users[m.sender].money += 3000
-			}
-			let str = `Room ID: ${room.id}\n\n${arr.slice(0, 3).join('')}\n${arr.slice(3, 6).join('')}\n${arr.slice(6).join('')}\n\n${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}\n❌: @${room.game.playerX.split('@')[0]}\n⭕: @${room.game.playerO.split('@')[0]}\n\nKetik *nyerah* untuk menyerah dan mengakui kekalahan`
-			if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat)
-			room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat
-			if (room.x !== room.o) await naze.sendMessage(room.x, { text: str, mentions: parseMention(str) }, { quoted: m })
-			await naze.sendMessage(room.o, { text: str, mentions: parseMention(str) }, { quoted: m })
-			if (isTie || isWin) delete tictactoe[room.id]
-		}
+		let room = Object.values(tictactoe).find(room => 
+    room.id && 
+    room.game && 
+    room.state && 
+    room.id.startsWith('tictactoe') && 
+    [room.game.playerX, room.game.playerO].includes(m.sender) && 
+    room.state == 'PLAYING'
+);
+
+if (room) {
+    let now = Date.now();
+    if (now - (room.lastMove || now) > 5 * 60 * 1000) {
+        m.reply('The Tic-Tac-Toe game has been canceled due to inactivity for 5 minutes.');
+        delete tictactoe[room.id];
+        return;
+    }
+    room.lastMove = now;
+    let ok, isWin = false, isTie = false, isSurrender = false;
+
+    if (!/^([1-9]|(me)?surrender|surr?ender|off|skip)$/i.test(m.text)) return;
+
+    isSurrender = !/^[1-9]$/.test(m.text);
+    if (m.sender !== room.game.currentTurn) {
+        if (!isSurrender) return true;
+    }
+    if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
+        m.reply({'-3': 'The game has ended', '-2': 'Invalid', '-1': 'Invalid position', 0: 'Invalid position'}[ok]);
+        return true;
+    }
+    if (m.sender === room.game.winner) isWin = true;
+    else if (room.game.board === 511) isTie = true;
+
+    if (!(room.game instanceof TicTacToe)) {
+        room.game = Object.assign(new TicTacToe(room.game.playerX, room.game.playerO), room.game);
+    }
+
+    let arr = room.game.render().map(v => ({
+        X: '❌',
+        O: '⭕',
+        1: '1️⃣',
+        2: '2️⃣',
+        3: '3️⃣',
+        4: '4️⃣',
+        5: '5️⃣',
+        6: '6️⃣',
+        7: '7️⃣',
+        8: '8️⃣',
+        9: '9️⃣'
+    }[v]));
+
+    if (isSurrender) {
+        room.game._currentTurn = m.sender === room.game.playerX;
+        isWin = true;
+    }
+
+    let winner = isSurrender ? room.game.currentTurn : room.game.winner;
+    if (isWin) {
+        db.users[m.sender].limit += 3;
+        db.users[m.sender].money += 3000;
+    }
+
+    let str = `Room ID: ${room.id}\n\n${arr.slice(0, 3).join('')}\n${arr.slice(3, 6).join('')}\n${arr.slice(6).join('')}\n\n${isWin ? `@${winner.split('@')[0]} Wins!` : isTie ? `Game ended` : `Turn of ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}\n❌: @${room.game.playerX.split('@')[0]}\n⭕: @${room.game.playerO.split('@')[0]}\n\nType *surrender* to give up and acknowledge defeat.`;
+
+    if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat) {
+        room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat;
+    }
+
+    if (room.x !== room.o) await naze.sendMessage(room.x, { text: str, mentions: parseMention(str) }, { quoted: m });
+    await naze.sendMessage(room.o, { text: str, mentions: parseMention(str) }, { quoted: m });
+
+    if (isTie || isWin) delete tictactoe[room.id];
+}
 		
 		// Suit PvP
-		let roof = Object.values(suit).find(roof => roof.id && roof.status && [roof.p, roof.p2].includes(m.sender))
-		if (roof) {
-			let now = Date.now();
-			let win = '', tie = false;
-			if (now - (roof.lastMove || now) > 3 * 60 * 1000) {
-				m.reply('Game match cancelled karena tidak ada aktivitas selama 3 menit.');
-				delete suit[roof.id];
-				return;
-			}
-			roof.lastMove = now;
-			if (m.sender == roof.p2 && /^(acc(ept)?|accept|go|oke?|reject|don't want|later|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
-				if (/^(reject|don't want|later|n|ga(k.)?bisa)/i.test(m.text)) {
-					m.reply(`@${roof.p2.split`@`[0]} rejected the match,\nsuit dibatalkan`)
-					delete suit[roof.id]
-					return !0
-				}
-				roof.status = 'play';
-				roof.asal = m.chat;
-				m.reply(`Match request sent to chat\n\n@${roof.p.split`@`[0]} dan @${roof.p2.split`@`[0]}\n\nSilahkan pilih suit di chat masing-masing klik https://wa.me/${botNumber.split`@`[0]}`)
-				if (!roof.pilih) naze.sendMessage(roof.p, { text: `Please choose \n\nBatu🗿\nKertas📄\nGunting✂️` }, { quoted: m })
-				if (!roof.pilih2) naze.sendMessage(roof.p2, { text: `Please choose \n\nBatu🗿\nKertas📄\nGunting✂️` }, { quoted: m })
-			}
-			let jwb = m.sender == roof.p, jwb2 = m.sender == roof.p2;
-			let g = /Scissors/i, b = /Rock/i, k = /Paper/i, reg = /^(Scissors|Rock|Paper)/i;
-			
-			if (jwb && reg.test(m.text) && !roof.pilih && !m.isGroup) {
-				roof.pilih = reg.exec(m.text.toLowerCase())[0];
-				roof.text = m.text;
-				m.reply(`You have chosen ${m.text} ${!roof.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`);
-				if (!roof.pilih2) naze.sendMessage(roof.p2, { text: '_Lawan sudah memilih_\nSekarang giliran kamu' })
-			}
-			if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
-				roof.pilih2 = reg.exec(m.text.toLowerCase())[0]
-				roof.text2 = m.text
-				m.reply(`You have chosen ${m.text} ${!roof.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
-				if (!roof.pilih) naze.sendMessage(roof.p, { text: '_Lawan sudah memilih_\nSekarang giliran kamu' })
-			}
-			let stage = roof.pilih
-			let stage2 = roof.pilih2
-			if (roof.pilih && roof.pilih2) {
-				if (b.test(stage) && g.test(stage2)) win = roof.p
-				else if (b.test(stage) && k.test(stage2)) win = roof.p2
-				else if (g.test(stage) && k.test(stage2)) win = roof.p
-				else if (g.test(stage) && b.test(stage2)) win = roof.p2
-				else if (k.test(stage) && b.test(stage2)) win = roof.p
-				else if (k.test(stage) && g.test(stage2)) win = roof.p2
-				else if (stage == stage2) tie = true
-				db.users[roof.p == win ? roof.p : roof.p2].limit += tie ? 0 : 3
-				db.users[roof.p == win ? roof.p : roof.p2].money += tie ? 0 : 3000
-				naze.sendMessage(roof.asal, { text: `_*Hasil Suit*_${tie ? '\nSERI' : ''}\n\n@${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Menang \n` : ` Kalah \n`}\n@${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Menang \n` : ` Kalah \n`}\n\nPemenang Mendapatkan\n*Hadiah :* Uang(3000) & Limit(3)`.trim(), mentions: [roof.p, roof.p2] }, { quoted: m })
-				delete suit[roof.id]
-			}
-		}
+		let roof = Object.values(suit).find(roof => 
+    roof.id && 
+    roof.status && 
+    [roof.p, roof.p2].includes(m.sender)
+);
+
+if (roof) {
+    let now = Date.now();
+    let win = '', tie = false;
+
+    if (now - (roof.lastMove || now) > 3 * 60 * 1000) {
+        m.reply('Game match canceled due to inactivity for 3 minutes.');
+        delete suit[roof.id];
+        return;
+    }
+
+    roof.lastMove = now;
+
+    if (m.sender == roof.p2 && /^(acc(ept)?|accept|go|oke?|reject|don't want|later|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
+        if (/^(reject|don't want|later|n|ga(k.)?bisa)/i.test(m.text)) {
+            m.reply(`@${roof.p2.split`@`[0]} rejected the match,\nsuit canceled.`);
+            delete suit[roof.id];
+            return true;
+        }
+        roof.status = 'play';
+        roof.asal = m.chat;
+        m.reply(`Match request sent to chat\n\n@${roof.p.split`@`[0]} and @${roof.p2.split`@`[0]}\n\nPlease choose suit in your respective chats by clicking https://wa.me/${botNumber.split`@`[0]}`);
+        
+        if (!roof.pilih) naze.sendMessage(roof.p, { text: `Please choose \n\nRock🗿\nPaper📄\nScissors✂️` }, { quoted: m });
+        if (!roof.pilih2) naze.sendMessage(roof.p2, { text: `Please choose \n\nRock🗿\nPaper📄\nScissors✂️` }, { quoted: m });
+    }
+
+    let jwb = m.sender == roof.p, jwb2 = m.sender == roof.p2;
+    let g = /Scissors/i, b = /Rock/i, k = /Paper/i, reg = /^(Scissors|Rock|Paper)/i;
+
+    if (jwb && reg.test(m.text) && !roof.pilih && !m.isGroup) {
+        roof.pilih = reg.exec(m.text.toLowerCase())[0];
+        roof.text = m.text;
+        m.reply(`You have chosen ${m.text} ${!roof.pilih2 ? `\n\nWaiting for opponent to choose` : ''}`);
+        if (!roof.pilih2) naze.sendMessage(roof.p2, { text: '_Opponent has chosen_\nNow it’s your turn' });
+    }
+
+    if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
+        roof.pilih2 = reg.exec(m.text.toLowerCase())[0];
+        roof.text2 = m.text;
+        m.reply(`You have chosen ${m.text} ${!roof.pilih ? `\n\nWaiting for opponent to choose` : ''}`);
+        if (!roof.pilih) naze.sendMessage(roof.p, { text: '_Opponent has chosen_\nNow it’s your turn' });
+    }
+
+    let stage = roof.pilih;
+    let stage2 = roof.pilih2;
+
+    if (roof.pilih && roof.pilih2) {
+        if (b.test(stage) && g.test(stage2)) win = roof.p;
+        else if (b.test(stage) && k.test(stage2)) win = roof.p2;
+        else if (g.test(stage) && k.test(stage2)) win = roof.p;
+        else if (g.test(stage) && b.test(stage2)) win = roof.p2;
+        else if (k.test(stage) && b.test(stage2)) win = roof.p;
+        else if (k.test(stage) && g.test(stage2)) win = roof.p2;
+        else if (stage == stage2) tie = true;
+
+        db.users[roof.p == win ? roof.p : roof.p2].limit += tie ? 0 : 3;
+        db.users[roof.p == win ? roof.p : roof.p2].money += tie ? 0 : 3000;
+
+        naze.sendMessage(roof.asal, { 
+            text: `_*Match Result*_${tie ? '\nTIE' : ''}\n\n@${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Wins \n` : ` Loses \n`}\n@${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Wins \n` : ` Loses \n`}\n\nWinner Receives\n*Prize:* Money(3000) & Limit(3)`.trim(), 
+            mentions: [roof.p, roof.p2] 
+        }, { quoted: m });
+
+        delete suit[roof.id];
+    }
+}
 		
 		// Tebak Bomb
-		let pilih = '🌀', bomb = '💣';
-		if (m.sender in tebakbom) {
-			if (!/^[1-9]|10$/i.test(body) && !isCmd && !isCreator) return !0;
-			if (tebakbom[m.sender].petak[parseInt(body) - 1] === 1) return !0;
-			if (tebakbom[m.sender].petak[parseInt(body) - 1] === 2) {
-				tebakbom[m.sender].board[parseInt(body) - 1] = bomb;
-				tebakbom[m.sender].pick++;
-				m.react('❌')
-				tebakbom[m.sender].bomb--;
-				tebakbom[m.sender].nyawa.pop();
-				let brd = tebakbom[m.sender].board;
-				if (tebakbom[m.sender].nyawa.length < 1) {
-					await m.reply(`*GAME TELAH BERAKHIR*\nKamu terkena bomb\n\n ${brd.join('')}\n\n*Terpilih :* ${tebakbom[m.sender].pick}\n_Pengurangan Limit : 1_`);
-					m.react('😂')
-					delete tebakbom[m.sender];
-				} else m.reply(`*PILIH ANGKA*\n\nKamu terkena bomb\n ${brd.join('')}\n\nTerpilih: ${tebakbom[m.sender].pick}\nSisa nyawa: ${tebakbom[m.sender].nyawa}`);
-				return !0;
-			}
-			if (tebakbom[m.sender].petak[parseInt(body) - 1] === 0) {
-				tebakbom[m.sender].petak[parseInt(body) - 1] = 1;
-				tebakbom[m.sender].board[parseInt(body) - 1] = pilih;
-				tebakbom[m.sender].pick++;
-				tebakbom[m.sender].lolos--;
-				let brd = tebakbom[m.sender].board;
-				if (tebakbom[m.sender].lolos < 1) {
-					db.users[m.sender].money += 6000
-					await m.reply(`*KAMU HEBAT ಠ⁠ᴥ⁠ಠ*\n\n${brd.join('')}\n\n*Terpilih :* ${tebakbom[m.sender].pick}\n*Sisa nyawa :* ${tebakbom[m.sender].nyawa}\n*Bomb :* ${tebakbom[m.sender].bomb}\nBonus Money 💰 *+6000*`);
-					delete tebakbom[m.sender];
-				} else m.reply(`*PILIH ANGKA*\n\n${brd.join('')}\n\nTerpilih : ${tebakbom[m.sender].pick}\nSisa nyawa : ${tebakbom[m.sender].nyawa}\nBomb : ${tebakbom[m.sender].bomb}`)
-			}
-		}
+		let choose = '🌀', bomb = '💣';
+if (m.sender in guessBomb) {
+    if (!/^[1-9]|10$/i.test(body) && !isCmd && !isCreator) return true;
+    if (guessBomb[m.sender].cell[parseInt(body) - 1] === 1) return true;
+    if (guessBomb[m.sender].cell[parseInt(body) - 1] === 2) {
+        guessBomb[m.sender].board[parseInt(body) - 1] = bomb;
+        guessBomb[m.sender].pick++;
+        m.react('❌');
+        guessBomb[m.sender].bomb--;
+        guessBomb[m.sender].lives.pop();
+        let brd = guessBomb[m.sender].board;
+        if (guessBomb[m.sender].lives.length < 1) {
+            await m.reply(`*GAME HAS ENDED*\nYou hit a bomb\n\n ${brd.join('')}\n\n*Selected:* ${guessBomb[m.sender].pick}\n_Limit Reduction: 1_`);
+            m.react('😂');
+            delete guessBomb[m.sender];
+        } else m.reply(`*CHOOSE A NUMBER*\n\nYou hit a bomb\n ${brd.join('')}\n\nSelected: ${guessBomb[m.sender].pick}\nRemaining lives: ${guessBomb[m.sender].lives}`);
+        return true;
+    }
+    if (guessBomb[m.sender].cell[parseInt(body) - 1] === 0) {
+        guessBomb[m.sender].cell[parseInt(body) - 1] = 1;
+        guessBomb[m.sender].board[parseInt(body) - 1] = choose;
+        guessBomb[m.sender].pick++;
+        guessBomb[m.sender].passed--;
+        let brd = guessBomb[m.sender].board;
+        if (guessBomb[m.sender].passed < 1) {
+            db.users[m.sender].money += 6000;
+            await m.reply(`*YOU'RE AMAZING ಠ⁠ᴥ⁠ಠ*\n\n${brd.join('')}\n\n*Selected:* ${guessBomb[m.sender].pick}\n*Remaining lives:* ${guessBomb[m.sender].lives}\n*Bombs:* ${guessBomb[m.sender].bomb}\nBonus Money 💰 *+6000*`);
+            delete guessBomb[m.sender];
+        } else m.reply(`*CHOOSE A NUMBER*\n\n${brd.join('')}\n\nSelected: ${guessBomb[m.sender].pick}\nRemaining lives: ${guessBomb[m.sender].lives}\nBombs: ${guessBomb[m.sender].bomb}`);
+    }
+}
+			
 		
 		// Akinator
 		if (m.sender in akinator) {
